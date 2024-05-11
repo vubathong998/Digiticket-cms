@@ -1,0 +1,204 @@
+﻿:root {
+    --text--dark: black;
+    --text-light: white;
+    --text-grey: #646c9a;
+    --background--warning: #f69220;
+    --background--danger: #da1b20;
+    --background--caution: #f6ee21;
+    --background--safety: #00a652;
+    --background--notice: #0779b8;
+    --background-yellow: #ffda78;
+    --background-pink: #ff8d8d;
+    --background-cyan: #adffbf;
+    --background-deep-light: #e9e9e9;
+    --background-deep-light2: #f1f1f1;
+    --background-deep-light3: #f7f7f7;
+    --background-deep-light4: #f1f1f14f;
+    --background-white: white;
+    --timeRemoving: 0.4s;
+    --border-light: #e2e5ec;
+    --border-dark: #929292;
+    --border-noAllow: #e7e7e7;
+    --light-pink: #ffdcff;
+    --digiticket-color-yellow: #ffbe0f;
+}
+/* #region XS < 576px */
+@media screen and (max-width: 575px) {
+    :root {
+        font-size: 8px;
+    }
+}
+/* #endregion */
+
+/* #region SM ≥ 576px */
+@media screen and (max-width: 767px) and (min-width: 576px) {
+    :root {
+        font-size: 8px;
+    }
+}
+/* #endregion */
+
+/* #region MD ≥ 768px  */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+    :root {
+        font-size: 8px;
+    }
+}
+/* #endregion */
+
+/* #region LG ≥ 992px */
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+    :root {
+        font-size: 9px;
+    }
+}
+/* #endregion */
+
+/* #region XL ≥ 1200px */
+@media screen and (max-width: 1399px) and (min-width: 1200px) {
+    :root {
+        font-size: 10px;
+    }
+}
+/* #endregion */
+
+/* #region XXL ≥ 1400px */
+@media screen and (min-width: 1400px) {
+    :root {
+        font-size: 12px;
+    }
+}
+/* #endregion */
+
+/* #region custom plugin  */
+table.dataTable td,
+table.dataTable th {
+    font-size: 1.1rem;
+}
+.select2-selection__rendered {
+    font-size: 1rem;
+}
+.cke_inner span {
+    font-size: 1rem;
+}
+li.select2-results__option {
+    font-size: 1rem;
+}
+.tagify span {
+    font-size: 1rem;
+}
+/* #endregion */
+
+label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.cancel-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(12%, -21%);
+    border: none;
+    font-size: 2.6rem;
+    border-radius: 50%;
+    z-index: 99;
+    transition: 0.5s;
+    background-color: pink;
+    transform-origin: 50% 50%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.cancel-top-right:hover {
+    color: blue;
+}
+
+.modal-header > h1,
+.modal-header > h3 {
+    font-size: 2rem !important;
+}
+
+.modal .modal-content .modal-header .close:before {
+    font-size: 2.3rem !important;
+}
+
+.hightLighted {
+    background-color: #d3fff9 !important;
+}
+
+.error:not(label):not(div) {
+    border: 2px solid #f00;
+}
+
+.error {
+    color: red;
+}
+
+.beRemoving {
+    animation: imgVideoListRemove var(--timeRemoving) forwards;
+}
+
+@keyframes imgVideoListRemove {
+    from {
+        transform: translate(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.background-cyan {
+    background-color: var(--background-cyan);
+}
+
+.inputInTable {
+    border: 1px solid transparent;
+    background-color: transparent;
+    width: 50px;
+    color: var(--success);
+    font-size: 1.2rem;
+}
+
+.inputInTable:hover {
+    background-color: white;
+    border: 1px solid var(--border-dark);
+}
+
+.selectInTable {
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: var(--success);
+    font-size: 1.2rem;
+}
+
+.selectInTable:hover {
+    background-color: white;
+    border: 1px solid var(--border-dark);
+    cursor: pointer;
+}
+
+.headerList {
+    background: var(--background-yellow);
+}
+
+.readonly {
+    background-color: var(--border-noAllow) !important;
+    border: 1px solid rgb(192, 192, 192) !important;
+    cursor: not-allowed;
+}
+
+.invisible {
+    user-select: none;
+}
+
+.border-red {
+    border: 2px solid #da1b20 !important;
+}
+
+.dataTable tbody tr:not(tr .dataTables_empty):hover {
+    background-color: #ffa3e885;
+}
+
+.kt-footer {
+    z-index: 3;
+}

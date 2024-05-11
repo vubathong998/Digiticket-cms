@@ -1,0 +1,14 @@
+﻿#UsersPermissionModalTree {
+    height: calc(100vh - 160px);
+    overflow-y: scroll;
+}
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 40rem) !important;
+    }
+}
+@media screen and (min-width: 1400px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 35.2rem) !important;
+    }
+}

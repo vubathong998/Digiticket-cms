@@ -1,0 +1,71 @@
+﻿@using DigiticketCMS.Models.Tags;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@model ProductInfoToView
+@using (Html.BeginForm("ProductAddOrUnHome", "Product", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "FormProductUpdateHome",
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span>Thêm mới product home</span>
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <label>Lọc theo danh mục:</label>
+            <select class="cursor-pointer kt-select2-categories-modal form-control hightLight">
+                <option value="null">Tất cả</option>
+                @if (!Model.Categories.IsNullOrEmpty())
+                {
+                    foreach (var category in Model.Categories)
+                    {
+                        <optgroup label="@category.Name">
+                            @if (!category.SubCategory.IsNullOrEmpty())
+                            {
+                                foreach (var subCategory in category.SubCategory)
+                                {
+                                    <option value="@subCategory.Id">@subCategory.Name</option>
+                                }
+                            }
+                        </optgroup>
+                    }
+                }
+            </select>
+        </div>
+        <div class="mt-4">
+            <label>Lọc theo điểm đến:</label>
+            <select class="kt-select2-destination-modal form-control cursor-pointer hightLight">
+                <option value="null">Tất cả</option>
+                @if (!Model.Destinations.IsNullOrEmpty())
+                {
+                    foreach (var destination in Model.Destinations)
+                    {
+                        <option value="@destination.Id">@destination.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="tags-element mt-4">
+            <label for="">Chọn product (nhập 2 ký tự trở lên)</label><label class="text-red error ml-5" for="selectHome"></label>
+            <select class="form-control select-productHome" name="selectHome" id="selectHome"></select>
+        </div>
+        <div class="mt-4">
+            <label>Idx Home</label><label class="text-red error ml-5" for="idxHome"></label>
+            <input class="form-control" type="number" min="0" name="idxHome" id="idxHome" />
+        </div>
+        <input type="hidden" name="id" id="productUpdateHomeId" />
+        <input type="hidden" name="isHome" value="true" />
+    </div>
+    <div class="mt-3 modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

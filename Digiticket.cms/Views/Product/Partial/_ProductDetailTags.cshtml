@@ -1,0 +1,92 @@
+﻿@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Models.Product;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Models.Modals;
+@model ProductDetailTagsPartialViewModel
+
+@{
+    var Product = Model.ProductResponse;
+    var Tags = Model.TagsResponse;
+    int TagsLength = Tags.Count;
+    var TagsHighlight = Product.TagsHighlight;
+}
+@*<div class="col-12 px-0">
+        <label for="tagsView">TagsView</label><label class="text-red error ml-5" for="tagsView"></label>
+        <select class="kt-select2-tagsView cursor-pointer form-control" data-key="tagsView" multiple>
+            @if (!Model.LibTagViewResponse.IsNullOrEmpty())
+            {
+                foreach (var libTagsView in Model.LibTagViewResponse)
+                {
+                    bool isChecked = Product.TagsView.Any(t => t.Id == libTagsView.Id);
+                    <option value="@Json.Encode(libTagsView)" @(isChecked ? "selected" : "")>@libTagsView.Detail</option>
+                }
+            }
+        </select>
+    </div>*@
+<div class="" id="select-tags-highlight">
+    <label for="tagsHighlight">TagsHighlight</label><label class="text-red error ml-5" for="tagsHighlight"></label>
+    <div class="tags-container">
+        <div class="tags-element">
+            @*<select class="form-control select-tags-highlight" data-type="@((int)EnumCommonCode.ETagsItemType.ProductHighlight)" data-key="tagsHighlight" multiple="multiple">
+                    @foreach (var Tag in Tags)
+                    {
+                        bool isSelect = Product.TagsHighlight.Any(t => t.Id == Tag.Id);
+                        <option value="@Json.Encode(Tag)" @(isSelect ? "selected" : "")>@Tag.Name </option>
+                    }
+                </select>*@
+            <div class="eTagsHightLight border cursor-pointer">
+                <div class="eTagsHightLightValue p-2 pt-1">
+                    @if (!TagsHighlight.IsNullOrEmpty())
+                    {
+                        int tagsHighlightLength = Product.TagsHighlight.Count;
+                        for (int i = 0; i < tagsHighlightLength; i++)
+                        {
+                            var item = TagsHighlight[i];
+                            <div class="hightLightTagPickedItem border d-inline-block pl-1 mt-1">
+                                <button type="button"
+                                        data-id="@item.Id"
+                                        data-value="@Json.Encode(item)"
+                                        class="clearTagsHightLightBtn bg-transparent border-0 p-0"
+                                        onclick="ProductDetail.onClearTagsHightLight(this);">
+                                    <i class="ml-1 flaticon2-cancel-music"></i>
+                                </button>
+                                <span class="mr-2 cursor-default">@item.Name</span>
+                                <input type="hidden" class="Id" value="@item.Id" name="TagsHighlight[@i].Id" />
+                                <input type="hidden" class="ParentId" value="@item.ParentId" name="TagsHighlight[@i].ParentId" />
+                                <input type="hidden" class="CategoryId" value="@item.CategoryId" name="TagsHighlight[@i].CategoryId" />
+                                <input type="hidden" class="DestinationId" value="@item.DestinationId" name="TagsHighlight[@i].DestinationId" />
+                                <input type="hidden" class="TextView" value="@item.TextView" name="TagsHighlight[@i].TextView" />
+                                <input type="hidden" class="TextLink" value="@item.TextLink" name="TagsHighlight[@i].TextLink" />
+                                <input type="hidden" class="Name" value="@item.Name" name="TagsHighlight[@i].Name" />
+                                <input type="hidden" class="Type" value="@item.Type" name="TagsHighlight[@i].Type" />
+                                <input type="hidden" class="Idx" value="@item.Idx" name="TagsHighlight[@i].Idx" />
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="tagsHightLightDropDown border p-2">
+                    @Html.Partial("~/Views/Modals/_CustomModal.cshtml", new CustomModal()
+                    {
+                        ContainerName = "ModalTagHighLight",
+                        ContentName = "ContentModalTagHighLight"
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4" id="select-tags">
+    <label for="tags">Tags</label><label class="text-red error ml-5" for="tags"></label>
+    <div class="tags-container">
+        <div class="tags-element">
+            <select class="form-control select-tags" data-type="@((int)EnumCommonCode.ETagsItemType.Product)" data-key="tags" multiple="multiple">
+                @foreach (var Tag in Product.Tags)
+                {
+                    <option value="@Json.Encode(Tag)" selected>@Tag.Name </option>
+                }
+            </select>
+        </div>
+    </div>
+</div>

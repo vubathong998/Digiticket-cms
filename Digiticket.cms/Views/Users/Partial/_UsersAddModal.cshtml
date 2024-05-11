@@ -1,0 +1,27 @@
+﻿@using (Html.BeginForm("UsersAdd", "Users", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "UsersAdd",
+    showLoading = true,
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        <h1 class="modal-title">Thêm user</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label for="ids">Tìm user</label><label class="text-red error ml-5" for="ids"></label>
+        <div class="usersAddContainer">
+            <div class="usersAdd-element">
+                <select class="form-control select-usersAdd" multiple="multiple"></select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

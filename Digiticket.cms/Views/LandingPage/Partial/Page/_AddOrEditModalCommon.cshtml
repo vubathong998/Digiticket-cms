@@ -1,0 +1,144 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.Content;
+@using DigiticketCMS.Config;
+@model PageResponse
+
+@{
+    var isReadOnly = Model.Id == Guid.Empty;
+}
+@using (Html.BeginForm(isReadOnly ? "PageAdd" : "PageEdit", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "PageAddOrUpdateModal",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    if (!isReadOnly)
+    {
+        <input name="id" value="@Model.Id" type="hidden" />
+    }
+    else
+    {
+        <input type="hidden" name="type" value="1" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (isReadOnly)
+            {
+                <span>Thêm mới Page</span>
+            }
+            else
+            {
+                <span>Sửa Page <span class="text-success">@Model.Name</span></span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                <input class="form-control" name="name" value="@(isReadOnly ? "" : Model.Name)" />
+            </div>
+            <div class="col-12 col-lg-6">
+                <label for="Description">Mô tả</label><label class="text-red error ml-5" for="Description"></label>
+                <input class="form-control" name="Description" value="@(isReadOnly ? "" : Model.Description)" />
+            </div>
+            <div class="selectTag col-12 col-lg-6 mt-4">
+                <label>Chọn Tag</label>
+                <select class="form-control select-Tag" multiple="multiple">
+                    @if (!isReadOnly)
+                    {
+                        if (!Model.Tags.IsNullOrEmpty())
+                        {
+                            foreach (var item in Model.Tags)
+                            {
+                                <option value="@Json.Encode(item)" selected>@item.Name</option>
+                            }
+                        }
+                    }
+                </select>
+                @if (!isReadOnly)
+                {
+                    if (!Model.Tags.IsNullOrEmpty())
+                    {
+                        for (int i = 0; i < Model.Tags.Count; i++)
+                        {
+                            var item = Model.Tags[i];
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].Id" value="@item.Id" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].ParentId" value="@item.ParentId" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].CategoryId" value="@item.CategoryId" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].DestinationId" value="@item.DestinationId" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].TextView" value="@item.TextView" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].TextLink" value="@item.TextLink" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].Name" value="@item.Name" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].Type" value="@item.Type" />
+                            <input class="tagInputHidden" type="hidden" name="tags[@i].Idx" value="@item.Idx" />
+                        }
+                    }
+                }
+            </div>
+            @if (isReadOnly)
+            {
+                <div class="mt-4 col-12 col-lg-6">
+                    <label for="TemplateId">Chọn template</label><label class="text-red error ml-5" for="TemplateId"></label>
+                    <select class="form-control select-page" id="TemplateId"></select>
+                    <input type="hidden" class="place d-none" name="TemplateId" id="TemplateIdInput" />
+                </div>
+                <div class="mt-4 col-12 col-lg-6">
+                    <label for="TypeURL">TypeURL</label><label class="text-red error ml-5" for="TypeURL"></label>
+                    <select class="form-control cursor-pointer" name="TypeURL">
+                        <option value="@((int)EnumCommonCode.URLType.HasIndex)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.URLType.HasIndex)
+                        </option>
+                        <option value="@((int)EnumCommonCode.URLType.NoIndex)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.URLType.NoIndex)
+                        </option>
+                    </select>
+                </div>
+            }
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="MetaTitle">MetaTitle</label><label class="text-red error ml-5" for="MetaTitle"></label>
+                <input class="form-control" name="MetaTitle" value="@Model.MetaTitle" />
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="MetaDescription">MetaDescription</label><label class="text-red error ml-5" for="MetaDescription"></label>
+                <input class="form-control" name="MetaDescription" value="@Model.MetaDescription" />
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="MetaImage">MetaImage</label><label class="text-red error ml-5" for="MetaImage"></label>
+                <input class="form-control" name="MetaImage" value="@Model.MetaImage" />
+            </div>
+            <div class="col-12 col-lg-6 mt-4">
+                <label for="IsAuthenticated">IsAuthenticated</label><label class="text-red error ml-5" for="IsAuthenticated"></label>
+                <select name="IsAuthenticated" class="form-control cursor-pointer">
+                    <option value="false" @(isReadOnly ? "" : @Model.IsAuthenticated ? "" : "selected")>Không</option>
+                    <option value="true" @(isReadOnly ? "" : @Model.IsAuthenticated ? "selected" : "")>Có</option>
+                </select>
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="HtmlClass">HtmlClass</label><label class="text-red error ml-5" for="HtmlClass"></label>
+                <input class="form-control" name="HtmlClass" value="@(isReadOnly ? "" : Model.HtmlClass)" />
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="HtmlId">HtmlId</label><label class="text-red error ml-5" for="HtmlId"></label>
+                <input class="form-control" name="HtmlId" value="@(isReadOnly ? "" : Model.HtmlId)" />
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="LinkStyles">LinkStyles</label><label class="text-red error ml-5" for="LinkStyles"></label>
+                <input class="custom-tag" name="LinkStyles" value="@(isReadOnly ? "" : String.Join(",", Model.LinkStyles))" id="LinkStyles">
+            </div>
+            <div class="mt-4 col-12 col-lg-6">
+                <label for="LinkScripts">LinkScripts</label><label class="text-red error ml-5" for="LinkScripts"></label>
+                <input class="custom-tag" name="LinkScripts" value="@(isReadOnly ? "" : String.Join(",", Model.LinkScripts))" id="LinkScripts">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

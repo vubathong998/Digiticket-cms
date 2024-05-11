@@ -1,0 +1,17 @@
+﻿@using Services.Models.Responses.Product;
+@using Infrastructure.Extensions;
+@model ProductPlaceSuggestResponse
+
+<ul class="list-suggest mt-2" style="padding-inline-start:1rem">
+    @if (Model != null)
+    {
+        foreach (var item in Model.Predictions)
+        {
+            <li class="pointer mt-2 template" data-id="@item.Place_id" data-value="@item.Description">@item.Description</li>
+        }
+    }
+    else
+    {
+        <li class="mt-2">Không có kết quả</li>
+    }
+</ul>

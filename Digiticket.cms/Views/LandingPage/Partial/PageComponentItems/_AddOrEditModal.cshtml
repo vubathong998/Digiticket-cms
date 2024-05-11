@@ -1,0 +1,76 @@
+﻿@using DigiticketCMS.Models.Content;
+@model ToViewPageComponentItemsAddOrEditViewModel
+
+@{
+    var isReadOnly = Model.PageComponentId != null;
+    var PageComponentItems = Model.PageComponentItemsResponse;
+}
+
+@using (Html.BeginForm(isReadOnly ? "PageComponentItemsAdd" : "PageComponentItemsEdit", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "PageComponentItemsAddOrUpdate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    if (isReadOnly)
+    {
+        <input name="PageComponentId" value="@Model.PageComponentId.ToString()" type="hidden" />
+    }
+    else
+    {
+        <input name="Id" value="@PageComponentItems.Id" type="hidden" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (isReadOnly)
+            {
+                <span>Thêm mới Page component items</span>
+            }
+            else
+            {
+                <span>Sửa Page component items</span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="mt-4">
+            <label for="selectProduct">Sản phẩm</label><label class="text-red error ml-5" for="selectProduct"></label>
+            <select class="form-control select-Product" name="selectProduct" id="selectProduct">
+                @if (!isReadOnly)
+                {
+                    <option value="@PageComponentItems.ProductId" selected>@PageComponentItems.ProductName</option>
+                }
+            </select>
+            <input type="hidden" class="place d-none" name="ProductId" id="selectProductInput" value="@(isReadOnly ? "" : PageComponentItems.ProductId)" />
+        </div>
+        <div class="mt-4">
+            <label for="Image">Image</label><label class="text-red error ml-5" for="Image"></label>
+            <input class="form-control" name="Image" value="@(isReadOnly ? "" : PageComponentItems.Image)" />
+        </div>
+        <div class="mt-4">
+            <label for="Link">Link</label><label class="text-red error ml-5" for="Link"></label>
+            <input class="form-control" name="Link" value="@(isReadOnly ? "" : PageComponentItems.Link)" />
+        </div>
+        <div class="mt-4">
+            <label for="Alt">Alt</label><label class="text-red error ml-5" for="Alt"></label>
+            <input class="form-control" name="Alt" value="@(isReadOnly ? "" : PageComponentItems.Alt)" />
+        </div>
+        <div class="mt-4">
+            <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+            <input class="form-control" name="Idx" value="@(isReadOnly ? "" : PageComponentItems.Idx.ToString())" />
+        </div>
+        <div class="mt-4">
+            <label for="Type">Type</label><label class="text-red error ml-5" for="Type"></label>
+            <input class="form-control" name="Type" value="@(isReadOnly ? "" : PageComponentItems.Type.ToString())" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

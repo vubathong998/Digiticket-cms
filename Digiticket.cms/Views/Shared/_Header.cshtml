@@ -1,0 +1,45 @@
+﻿<!-- begin:: Header -->
+<div id="kt_header" class="kt-header kt-grid kt-grid--ver  kt-header--fixed ">
+    <!-- begin:: Aside -->
+    <div class="kt-header__brand kt-grid__item  bg-white px-3 border" id="kt_header_brand">
+        <div class="kt-header__brand-logo">
+            <a href="@Url.Action("Index", "Home")">
+                <img class="d-block w-100" alt="Logo" src="~/Content/Images/favicon-digiticket-01.svg" />
+            </a>
+        </div>
+    </div>
+    <!-- end:: Aside -->
+    <!-- begin:: Title -->
+    <h3 class="kt-header__title kt-grid__item">
+        Digiticket
+    </h3>
+    <!-- end:: Title -->
+    <!-- begin: Header Menu -->
+    <button class="kt-header-menu-wrapper-close" id="kt_header_menu_mobile_close_btn"><i class="la la-close"></i></button>
+    <div class="kt-header-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_header_menu_wrapper">
+        <div id="kt_header_menu" class="kt-header-menu kt-header-menu-mobile  kt-header-menu--layout-default ">
+
+        </div>
+    </div>
+    <!-- end: Header Menu -->
+    <!-- begin:: Header Topbar -->
+    <div class="kt-header__topbar">
+        <!--begin: User bar -->
+        <div class="kt-header__topbar-item kt-header__topbar-item--user">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="kt-nav d-flex">
+                    <div class="kt-nav__item">
+                        <span class="kt-nav__link">Xin chào<span class="text-success pl-1"><b>@User.Identity.Name</b></span></span>
+                    </div>
+                    <div class="kt-nav__item">
+                        <a class="kt-nav__link" href="@Url.Action("Logout", "Account")">Đăng xuất</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <!--end: User bar -->
+    </div>
+    <!-- end:: Header Topbar -->
+</div>
+<!-- end:: Header -->

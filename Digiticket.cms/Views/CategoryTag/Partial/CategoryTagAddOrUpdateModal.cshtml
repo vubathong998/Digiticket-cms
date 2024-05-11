@@ -1,0 +1,81 @@
+﻿@using DigiticketCMS.Models.CategoryTag;
+@using DigiticketCMS.Helpers;
+@model CategoryTagDataToAddOrUpdateViewModal
+
+@{
+    bool isReadOnly = Model.CategoryTagResponse.Id == 0;
+    var CategoryTagResponse = Model.CategoryTagResponse;
+}
+
+@using (Html.BeginForm(isReadOnly ? "CategoryTagAdd" : "CategoryTagEdit", "CategoryTag", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "CategoryTagAddOrUpdate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    if (!isReadOnly)
+    {
+        <input name="id" value="@CategoryTagResponse.Id" type="hidden" />
+    }
+    else if (Model.ParentId != 0)
+    {
+        <input name="TagParentId" value="@Model.ParentId" type="hidden" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (isReadOnly)
+            {
+                if (Model.ParentId == 0 && !Model.ParentName.IsTrueOrFalse())
+                {
+                    <span>
+                        Thêm mới chuyên mục blog cấp 1
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Thêm mới chuyên mục blog cấp @Model.Round | <span class="text-success">parent: @Model.ParentName</span>
+                    </span>
+                }
+            }
+            else
+            {
+                <span>
+                    Sửa tag blog <span class="text-success">@CategoryTagResponse.Name</span>
+                </span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        @if (isReadOnly)
+        {
+            <div class="">
+                <label for="Tag">Tag</label><label class="text-red error ml-5" for="Tag"></label>
+                @* select-Img *@
+                <select data-parentId="@Model.ParentId" class="form-control select-categoryTag cursor-pointer" id="Tag"></select>
+                <input type="hidden" name="ParentId" class="ParentId" />
+                <input type="hidden" name="TagId" class="TagId" />
+            </div>
+        }
+        <div class="@(isReadOnly ? "mt-4" : "")">
+            <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+            <input class="form-control" type="number" min="0" name="Idx" value="@(isReadOnly ? "" : CategoryTagResponse.Idx.ToString())" />
+        </div>
+        <div class="mt-4">
+            <label>IsView</label>
+            <select class="form-control cursor-pointer" name="IsView">
+                <option value="false" @(CategoryTagResponse.IsView ? "" : "selected")>Không</option>
+                <option value="true" @(CategoryTagResponse.IsView ? "selected" : "")>Có</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

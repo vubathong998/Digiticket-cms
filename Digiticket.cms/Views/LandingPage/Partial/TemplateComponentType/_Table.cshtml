@@ -1,0 +1,38 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.Content;
+@model List<TemplateComponentTypeResponse>
+
+<table class="table border">
+    <thead class="headerList">
+        <tr>
+            <th>Tên</th>
+            <th>System name</th>
+            @*<th>System code</th>*@
+            <td>Sửa</td>
+            <td>Xóa</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.IsNullOrEmpty())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.SystemName</td>
+                    @*<td>@item.SystemCode</td>*@
+                    <td>
+                        <button type="button" class="editType btn p-0" onclick="templateComponentType.onTemplateComponentTypeEditModal(`@item.Id`);">
+                            <i class="font-size-1r4 text-success flaticon2-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="deleteType btn p-0" onclick="templateComponentType.onTemplateComponentTypeDelete(`@item.Id`, `@item.Name`);">
+                            <i class="font-size-1r4 text-red flaticon-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

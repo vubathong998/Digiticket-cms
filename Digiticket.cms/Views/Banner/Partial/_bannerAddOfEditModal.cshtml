@@ -1,0 +1,161 @@
+﻿@using Services.Models.Responses.Banner;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using DigiticketCMS.Config;
+@model BannerResponse
+@{
+    bool isReadOnly = false;
+    if (Model.Id == 0)
+    {
+        isReadOnly = true;
+    }
+}
+@using (Html.BeginForm(Model.Id == 0 ? "BannerAdd" : "BannerEdit", "Banner", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "BannerAddOrEdit",
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        @if (isReadOnly)
+        {
+            <h1 class="modal-title">
+                Thêm mới banner
+            </h1>
+        }
+        else
+        {
+            <h1 class="modal-title">
+                Update banner <span class="text-success">@(Model.Name.IsTrueOrFalse() ? Model.Name : "")</span>
+            </h1>
+        }
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" value="@Model.Id" name="id" readonly />
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <label for="name">Chọn danh mục</label>
+                @if (isReadOnly)
+                {
+                    <select class="cursor-pointer form-control kt-select2-category--modal" name="categoryId">
+                        <option value="@Guid.Empty">Chưa chọn danh mục</option>
+                        @if (!Model.Categories.IsNullOrEmpty())
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+                                <optgroup label="@category.Name">
+                                    @foreach (var subCategory in category.SubCategory)
+                                    {
+                                        <option value="@subCategory.Id">@subCategory.Name</option>
+                                    }
+                                </optgroup>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="cursor-pointer form-control kt-select2-category--modal--disable">
+                        <option value="">@(Model.CategoryName.IsTrueOrFalse() ? Model.CategoryName : "Không có")</option>
+                    </select>
+                }
+            </div>
+            <div class="col-12 col-sm-6 mt-lg-0 mt-6">
+                <label for="name">Chọn điểm đến</label>
+                @if (isReadOnly)
+                {
+                    <select class="form-control kt-select2-destination--modal cursor-pointer" name="destinationId">
+                        <option value="@Guid.Empty">Chưa chọn điểm đến</option>
+                        @if (!Model.Destinations.IsNullOrEmpty())
+                        {
+                            foreach (var destination in Model.Destinations)
+                            {
+                                <option value="@destination.Id">@destination.Name</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="form-control kt-select2-destination--modal--disable cursor-pointer">
+                        <option value="">@(Model.DestinationName.IsTrueOrFalse() ? Model.DestinationName : "Không có")</option>
+                    </select>
+                }
+            </div>
+            <div class="col-12 col-sm-6 mt-4">
+                <label for="name">Chọn type</label>
+                @if (isReadOnly)
+                {
+                    <select class="form-control select-bannerType"></select>
+                }
+                else
+                {
+                    <select class="form-control select-bannerType-disable">
+                        <option value="@Model.Type" selected>@(Model.TypeName.IsTrueOrFalse() ? Model.TypeName : "Không có")</option>
+                    </select>
+                }
+                <input type="hidden" class="typeInput" name="type" value="@Model.Type" />
+            </div>
+            <div class="col-12 col-sm-6 mt-4">
+                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                <input class="form-control" name="name" id="name" value="@Model.Name" />
+            </div>
+            <div class="col-12 img-container mt-4">
+                <label for="avatar">Chọn ảnh</label><label class="text-red error ml-5" for="lookImg"></label>
+                <select class="form-control select-img" data-name="selectPicture">
+                    @if (Model.Url.IsTrueOrFalse())
+                    {
+                        <option value="@Model.Url" selected>@Model.Url</option>
+                    }
+                </select>
+                <div class="form-suggest-result">
+                    <div class="spinner-border kt-spinner--success d-none mt-2"></div>
+                </div>
+                <div class="eShowImg mt-3 @(Model.Url.IsTrueOrFalse() ? "" : "display-none")">
+                    <div class="dataTables_wrapper">
+                        <div class="row">
+                            <div class="col-1">Preview ảnh</div>
+                            <div class="col-4">Link</div>
+                            <div class="col-2">Link Option</div>
+                            <div class="col-4">Alt</div>
+                            <div class="col-1">Idx</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1 h-80px">
+                                <img src="@APIMediaConfig.APIMediaShowContentDefault/@Model.Url" class="img-fit" alt="@Model.Alt" />
+                            </div>
+                            <div class="col-4">
+                                @*<input name="link" class="form-control" value="@(isReadOnly ? "" : Model.Link)" />*@
+                                @Input.SelectLinkInImage(Model.Link, Model.Link)
+                            </div>
+                            <div class="col-2">
+                                <select class="cursor-pointer form-control elemLinkOption" name="linkOption">
+                                    <option value="@((int)EnumCommonCode.EnumLinkOption.no)"
+                                            @(Model.LinkOption == (int)EnumCommonCode.EnumLinkOption.no ? "selected" : "")>
+                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumLinkOption.no)
+                                    </option>
+                                    <option value="@((int)EnumCommonCode.EnumLinkOption.nofollow)"
+                                            @(Model.LinkOption == (int)EnumCommonCode.EnumLinkOption.nofollow ? "selected" : "")>
+                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumLinkOption.nofollow)
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-4"><input name="alt" class="form-control elemAlt" value="@(isReadOnly ? "" : Model.Alt)" /></div>
+                            <div class="col-1"><input name="idx" type="number" min="0" class="elemIdx form-control" value="@(isReadOnly ? "0" : Model.Idx.ToString())" /></div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="@Model.Url" name="url" class="elemURL" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

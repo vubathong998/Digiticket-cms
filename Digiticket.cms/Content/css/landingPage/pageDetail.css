@@ -1,0 +1,53 @@
+﻿[readonly].form-control {
+    background-color: #e7e7e7;
+    border: 1px solid rgb(192, 192, 192);
+    cursor: not-allowed;
+}
+
+/* #region XL ≥ 1200px */
+@media screen and (max-width: 1399px) and (min-width: 1200px) {
+    .inforContain {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: calc(100vh - 30.7rem);
+    }
+    .info {
+        height: calc(100vh - 312px);
+        overflow: scroll;
+    }
+    .parttenImg {
+        overflow: scroll;
+        height: calc(100vh - 267px);
+    }
+    .editingPlace {
+        overflow: scroll;
+        height: calc(100vh - 17rem);
+    }
+    .editingPlace {
+        overflow: scroll;
+        height: calc(100vh - 18rem);
+    }
+}
+/* #endregion */
+
+/* #region XXL ≥ 1400px */
+@media screen and (min-width: 1400px) {
+    .inforContain {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: calc(100vh - 27.7rem);
+    }
+    .info {
+        height: calc(100vh - 330px);
+        overflow: scroll;
+    }
+    .parttenImg {
+        overflow: scroll;
+        height: calc(100vh - 273px);
+    }
+    .editingPlace {
+        overflow: scroll;
+        height: calc(100vh - 18rem);
+    }
+}
+/* #endregion */

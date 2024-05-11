@@ -1,0 +1,25 @@
+﻿.selectCategoryTag,
+.selectCategoryTag label {
+    animation: fadingPink 1.5s ease-out;
+}
+
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 37.9rem) !important;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 33.6rem) !important;
+    }
+}
+
+@keyframes fadingPink {
+    from{
+        box-shadow: 0 4px 11px 2px rgba(255, 0, 0, 0.185);
+    }
+    to {
+        box-shadow: none;
+    }
+}

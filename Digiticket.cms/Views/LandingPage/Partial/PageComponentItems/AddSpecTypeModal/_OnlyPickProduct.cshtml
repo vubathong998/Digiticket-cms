@@ -1,0 +1,77 @@
+﻿@using DigiticketCMS.Models.Content;
+@using DigiticketCMS.Config;
+@model ToViewPageComponentItemsAddOrEditViewModel
+
+@{
+    var isReadOnly = Model.PageComponentId != null;
+    var PageComponentItems = Model.PageComponentItemsResponse;
+}
+@using (Html.BeginForm(isReadOnly ? "PageComponentItemsAdd" : "PageComponentItemsEdit", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "PageComponentItemsAddOrUpdate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+
+    if (isReadOnly)
+    {
+        <input name="PageComponentId" value="@Model.PageComponentId" type="hidden" />
+        <input name="type" value="@Model.Type" type="hidden" />
+    }
+    else
+    {
+        <input name="id" value="@PageComponentItems.Id" type="hidden" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (isReadOnly)
+            {
+                <span>
+                    Thêm mới Page component item
+                    [@(EnumCommonCode.GetDisplayNameEnum<EnumCommonCode.EnumPageComponentItemType>((EnumCommonCode.EnumPageComponentItemType)Model.Type))]
+                </span>
+            }
+            else
+            {
+                <span>
+                    Sửa Page component item
+                    [@(EnumCommonCode.GetDisplayNameEnum<EnumCommonCode.EnumPageComponentItemType>((EnumCommonCode.EnumPageComponentItemType)PageComponentItems.Type))]
+                </span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <label for="selectProduct">Sản phẩm</label><label class="text-red error ml-5" for="selectProduct"></label>
+            <select class="form-control select-Product" name="" id="selectProduct">
+                @if (!isReadOnly)
+                {
+                    if (PageComponentItems.ProductId != Guid.Empty.ToString())
+                    {
+                        <option value="@PageComponentItems.ProductId" selected>@PageComponentItems.ProductName</option>
+                    }
+                }
+            </select>
+            <input type="hidden" class="place d-none" name="ProductId" id="selectProductInput" value="@(isReadOnly ? "" : PageComponentItems.ProductId)" />
+        </div>
+        <div class="mt-4">
+            <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+            <input type="number" min="0" class="form-control" name="Idx" value="@(isReadOnly ? "" : PageComponentItems.Idx.ToString())" />
+        </div>
+        <div class="getParttenImg mt-4 display-none">
+            <label>Ảnh mẫu</label>
+            <div class="border p-3">
+                <img class="img-width-fit" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

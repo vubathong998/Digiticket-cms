@@ -1,0 +1,58 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.Content;
+@model List<PageComponentItemsResponse>
+
+<table class="table border pageTemplateTable table-bordered">
+    <thead class="headerList">
+        <tr>
+            <th>ProductName</th>
+            <th>Image</th>
+            <th>Link</th>
+            <th>Alt</th>
+            <th>Độ ưu tiên</th>
+            <th>Type</th>
+            <th>TotalRows</th>
+            <th>Status</th>
+            <th>Người tạo</th>
+            <th>Ngày tạo</th>
+            <td>Người sửa</td>
+            <td>Ngày sửa</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.IsNullOrEmpty())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName </td>
+                    <td>@item.Image</td>
+                    <td>@item.Link</td>
+                    <td>@item.Alt</td>
+                    <td>@item.Idx</td>
+                    <td>@item.Type</td>
+                    <td>@item.TotalRows</td>
+                    <td>@item.Status</td>
+                    <td>@item.CreatedByName</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.LastEditedByName</td>
+                    <td>@item.LastEditedDate</td>
+                    <td>
+                        <div class="text-center">
+                            <button type="button" class="btn p-0" onclick="pageComponent.onShowPageComponentAddModal(`@item.Id`)">
+                                <i class="font-size-1r4 text-success flaticon2-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-center">
+                            <button type="button" class="btn p-0" onclick="pageComponentItems.onLoadAddModal(`@item.Id`)">
+                                <i class="font-size-1r4 text-primary flaticon2-files-and-folders"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

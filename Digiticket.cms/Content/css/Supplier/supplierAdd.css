@@ -1,0 +1,4 @@
+﻿.contentPart {
+    height: calc(100vh - 264px);
+    overflow-y: scroll;
+}

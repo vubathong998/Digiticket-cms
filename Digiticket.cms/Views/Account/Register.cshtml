@@ -1,0 +1,47 @@
+﻿@model DigiticketCMS.Models.ViewModel.RegisterViewModel
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<!--begin::Head-->
+<div class="kt-login__head text-left">
+    <span class="kt-login__signup-label">Bạn đã có tài khoản?</span>&nbsp;&nbsp;
+    <a href="@Url.Action("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl })" class="kt-link kt-login__signup-link">Đăng nhập!</a>
+</div>
+<!--end::Head-->
+<!--begin::Body-->
+<div class="kt-login__body">
+    <!--begin::Signin-->
+    <div class="kt-login__form">
+        <div class="kt-login__title">
+            <h3>Đăng ký</h3>
+        </div>
+        <!--begin::Form-->
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data", @class = "kt-form", @id = "kt_register_form" }))
+        {
+            @Html.AntiForgeryToken()
+            if (ViewBag.Message != null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    <div class="alert-text">@ViewBag.Message</div>
+                </div>
+            }
+            <div class="form-group">
+                <input class="form-control" type="email" placeholder="Nhập email" name="Username" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="Password" type="password" placeholder="Nhập mật khẩu" name="Password" required minlength="6" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" placeholder="Nhập lại mật khẩu" name="ConfirmPassword" required minlength="6" equalTo="#Password" autocomplete="off">
+            </div>
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="kt-login__actions">
+                <button id="kt_login_signin_submit" type="submit" class="btn btn-primary btn-elevate kt-login__btn-primary mx-auto">Đăng ký</button>
+            </div>
+        }
+    </div>
+    <!--end::Signin-->
+</div>
+<!--end::Body-->

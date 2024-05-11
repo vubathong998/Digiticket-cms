@@ -1,0 +1,169 @@
+﻿@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+@using System.Web.Helpers;
+@using System;
+@using DigiticketCMS.Models.Content;
+@using Infrastructure.Extensions;
+@model ToViewPageComponentAddOrEditViewModel
+
+@{
+    var IsReadOnly = Model.Id == Guid.Empty || Model.Id == null;
+    var Category = Model.Category;
+    var Destination = Model.Destination;
+    var PageComponent = Model.PageComponentResponse;
+    var TemplateComponent = Model.TemplateComponent;
+}
+@using (Html.BeginForm(IsReadOnly ? "PageComponentAdd" : "PageComponentEdit", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "mediaUpload",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    if (!IsReadOnly)
+    {
+        <input name="id" value="@Model.Id" type="hidden" />
+    }
+    else
+    {
+        <input name="PageId" value="@Model.PageId" type="hidden" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (IsReadOnly)
+            {
+                <span>Thêm mới Page component</span>
+            }
+            else
+            {
+                <span>Sửa component <span class="text-success">@PageComponent.Name</span></span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="editingPlace col-6">
+                @if (IsReadOnly)
+                {
+                    <div class="">
+                        <label for="TemplateComponent">TemplateComponent</label><label class="text-red error ml-5" for="TemplateComponent"></label>
+                        <select class="kt-select2-TemplateComponentId form-control cursor-pointer">
+                            <option value="null">Chưa chọn</option>
+                            @if (!TemplateComponent.IsNullOrEmpty())
+                            {
+                                foreach (var item in TemplateComponent)
+                                {
+                                    <option value="@Json.Encode(new {id = item.Id, viewImage = item.ViewImage})">
+                                        @item.Name
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <input name="TemplateComponentId" class="TemplateComponentId" type="hidden" />
+                    </div>
+                }
+                <div class="mt-4">
+                    <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                    <input class="form-control" name="name" value="@(IsReadOnly ? "" : PageComponent.Name)" />
+                </div>
+                <div class="mt-4">
+                    <label for="Description">Mô tả</label><label class="text-red error ml-5" for="Description"></label>
+                    <div class="CKEditor">
+                        <textarea class="text-html form-control w-100" name="Description" id="Description">@(IsReadOnly ? "" : PageComponent.Description)</textarea>
+                    </div>
+                </div>
+                @if (IsReadOnly)
+                {
+                    <div class="mt-4">
+                        <label for="DestinationId">Điểm đến</label><label class="text-red error ml-5" for="DestinationId"></label>
+                        <select class="kt-select2-Destination form-control cursor-pointer" name="DestinationId">
+                            <option value="null">Chưa chọn</option>
+                            @if (!Destination.IsNullOrEmpty())
+                            {
+                                foreach (var item in Destination)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <label for="CategoryId">Danh mục</label><label class="text-red error ml-5" for="CategoryId"></label>
+                        <select class="kt_select2_Category form-control cursor-pointer" name="CategoryId">
+                            <option value="null">Chưa chọn</option>
+                            @if (!Category.IsNullOrEmpty())
+                            {
+                                foreach (var item in Category)
+                                {
+                                    <option value="@item.Id" data-style="font-weight:bold;">@item.Name</option>
+                                    if (!item.SubCategory.IsNullOrEmpty())
+                                    {
+                                        foreach (var subCategory in item.SubCategory)
+                                        {
+                                            <option value="@subCategory.Id" data-style="margin-left:15px;">@subCategory.Name</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                }
+                <div class="mt-4">
+                    <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+                    <input type="number" min="0" class="form-control" name="Idx" value="@(IsReadOnly ? "" : PageComponent.Idx.ToString())" />
+                </div>
+                <div class="mt-4">
+                    <label for="HtmlContent">HtmlContent</label><label class="text-red error ml-5" for="HtmlContent"></label>
+                    <div class="CKEditor">
+                        <textarea class="text-html form-control w-100" name="HtmlContent" id="HtmlContent">@(IsReadOnly ? "" : PageComponent.HtmlContent)</textarea>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="HtmlClass">HtmlClass</label><label class="text-red error ml-5" for="HtmlClass"></label>
+                    <input class="form-control" name="HtmlClass" value="@(IsReadOnly ? "" : PageComponent.HtmlClass)" />
+                </div>
+                <div class="mt-4">
+                    <label for="HtmlId">HtmlId</label><label class="text-red error ml-5" for="HtmlId"></label>
+                    <input class="form-control" name="HtmlId" value="@(IsReadOnly ? "" : PageComponent.HtmlId)" />
+                </div>
+                <div class="mt-4">
+                    <label for="LinkStyles">LinkStyles</label><label class="text-red error ml-5" for="LinkStyles"></label>
+                    <input class="custom-tag" name="LinkStyles" value="@(IsReadOnly ? "" : String.Join(",", PageComponent.LinkStyles))" id="LinkStyles">
+                </div>
+                <div class="mt-4">
+                    <label for="LinkScripts">LinkScripts</label><label class="text-red error ml-5" for="LinkScripts"></label>
+                    <input class="custom-tag" name="LinkScripts" value="@(IsReadOnly ? "" : String.Join(",", PageComponent.LinkScripts))" id="LinkScripts">
+                </div>
+            </div>
+            <div class="col-6">
+                <label>mẫu ảnh @(IsReadOnly ? "(Chọn TemplateComponent để thấy mẫu ảnh!)" : "")</label>
+                <div class="parttenImgAdd @(IsReadOnly ? "display-none" : "" ) border p-2">
+                    @if (IsReadOnly)
+                    {
+                        <img src="" class="parttenImgAdd img-width-fit" />
+                    }
+                    else
+                    {
+                        if (Model.ViewImage.IsTrueOrFalse())
+                        {
+                            <img src="@APIMediaConfig.APIMediaShowContentDefault@Model.ViewImage" class="parttenImgAdd img-width-fit" />
+                        }
+                        else
+                        {
+                            <h3><span class="text-info">@PageComponent.Name</span> không có mẫu ảnh! </h3>
+                        }
+                    }
+                </div>
+                <h3 class="parttenImgAddWarning display-none">không có mẫu ảnh! </h3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

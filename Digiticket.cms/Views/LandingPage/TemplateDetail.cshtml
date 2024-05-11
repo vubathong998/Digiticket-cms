@@ -1,0 +1,109 @@
+﻿@using DigiticketCMS.Helpers;
+@using Services.Models.Responses.Content;
+@using Infrastructure.Config;
+@model TemplateResponse
+
+@{
+    ViewBag.Title = "TemplateDetail " + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section customStyles{
+    <link href="~/Content/css/landingPage/TemplateDetail.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <input type="hidden" id="idTemplate" value="@Model.Id" />
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Thông tin <span class="text-success">@Model.Name</span>
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="kt-portlet__head-actions">
+                            <div class=" text-right">
+                                <a href="@Url.Action("TemplateMapModal", "LandingPage", new {id = Model.Id})" class="btn btn-primary btn-elevate btn-icon-sm"
+                                   data-modal="" data-modal-size="modal-lg" data-callback="template.onLoadAfterLoadTemplateMapModal();">
+                                    <i class="flaticon-map"></i>
+                                    Thêm template component
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <ul class="nav nav-tabs mb-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link show active" data-toggle="tab" href="#info">Thông tin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#mapTemplateComponent">Danh sách template component</a>
+                    </li>
+                </ul>
+                <!-- Begin: Tab panes -->
+                <div class="tab-content mt-2">
+                    @using (Html.BeginForm("TemplateEdit", "LandingPage", FormMethod.Post, new
+                    {
+                        enctype = "multipart/form-data",
+                        @class = "kt-form ajax-form",
+                        @id = "mediaUpload",
+                        spellcheck = false,
+                        showLoading = true
+                    }))
+                    {
+                        <input type="hidden" value="@Model.Id" name="Id" />
+                        <div id="info" class="tab-pane show active">
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                                    <input type="text" class="form-control" name="name" value="@Model.Name" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label for="Description">Mô tả</label><label class="text-red error ml-5" for="Description"></label>
+                                    <input type="text" class="form-control" name="Description" value="@Model.Description" />
+                                </div>
+                                <div class="col-12 col-lg-6 mt-4">
+                                    <label for="SystemName">SystemName <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                    <input type="text" class="noClick readonly form-control" readonly value="@Model.SystemName" />
+                                </div>
+                                <div class="col-12 col-lg-6 mt-4">
+                                    <label for="ViewName">ViewName <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                    <input type="text" class="noClick readonly form-control" readonly value="@Model.ViewName" />
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn-upload-media btn btn-primary">Chỉnh sửa</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div id="mapTemplateComponent" class="tab-pane">
+                        <div class="tableGetByTemplate">
+                        </div>
+                    </div>
+                </div>
+                <!-- End: Tab panes -->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Content -->
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts {
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/templateDetail.js?v=@SystemVersion.VersionJS"></script>
+
+    <script>
+        $(document).ready(function () {
+            templateDetail.init();
+        })
+    </script>
+}

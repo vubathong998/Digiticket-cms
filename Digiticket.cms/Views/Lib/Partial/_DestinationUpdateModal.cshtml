@@ -1,0 +1,150 @@
+﻿@using Services.Models.Responses.Lib;
+@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@model LibDestinationResponse
+
+@using (Html.BeginForm("LibDestinationUpdate", "Lib", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "FormLibCategoryUpdate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    <div class="modal-header">
+        <input type="hidden" value="@Model.Id" name="id" />
+        <h1 class="modal-title">
+            Update điểm đến <span class="text-success">@Model.Name</span>
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                <input type="text" class="form-control" name="name" value="@Model.Name" />
+            </div>
+            <div class="place-container col-12 col-lg-3">
+                <label for="placeId">Địa điểm</label><label class="text-red error ml-5" for="placeId"></label>
+                @if (Model.PlaceId.IsTrueOrFalse())
+                {
+                    <select class="form-control select-DestinationPlace" name="selectPlace" id="selectPlace">
+                        <option value="@Model.PlaceId" selected>@Model.Place</option>
+                    </select>
+                }
+                else
+                {
+                    <select class="form-control select-DestinationPlace" name="selectPlace" id="selectPlace"></select>
+                }
+                <input type="hidden" class="place d-none" name="place" value="@Model.Place" />
+                <input type="hidden" class="placeId d-none" name="placeId" value="@Model.PlaceId" />
+            </div>
+            <div class="col-12 col-lg-3">
+                <label for="countProduct">Tổng sản phẩm</label><label class="text-red error ml-5" for="countProduct"></label>
+                <input type="text" id="countProduct" justNumber class="form-control" name="countProduct" value="@Model.CountProduct" />
+            </div>
+            <div class="col-12 col-lg-3">
+                <label for="isHome">Is Home</label><label class="text-red error ml-5" for="isHome"></label>
+                <select id="isHome" name="isHome" class="cursor-pointer form-control">
+                    <option value="False" @(Model.IsHome ? "selected" : "")>Không</option>
+                    <option value="True" @(Model.IsHome ? "selected" : "")>Có</option>
+                </select>
+            </div>
+            @*<div class="col-12 col-lg-4">
+                <label for="status">Trạng thái</label><label class="text-red error ml-5" for="status"></label>
+                <select id="status" name="status" class="cursor-pointer form-control">
+                    <option value="0" @(Model.Status == 0 ? "selected" : "")>Trạng thái 0</option>
+                    <option value="1" @(Model.Status == 1 ? "selected" : "")>Trạng thái 1</option>
+                    <option value="2" @(Model.Status == 2 ? "selected" : "")>Trạng thái 2</option>
+                    <option value="3" @(Model.Status == 3 ? "selected" : "")>Trạng thái 3</option>
+                    <option value="4" @(Model.Status == 4 ? "selected" : "")>Trạng thái 4</option>
+                    <option value="5" @(Model.Status == 5 ? "selected" : "")>Trạng thái 5</option>
+                </select>
+            </div>*@
+        </div>
+        <div class="">
+            <div class="text-red">
+            </div>
+            <div class="imgDestination-container mt-3">
+                <label>Tên ảnh</label>
+                <div class="tags-element">
+                    <select class="form-control select-img-destination" data-name="selectPicture" data-key="images" multiple="multiple">
+                        @if (!Model.Images.IsNullOrEmpty())
+                        {
+                            foreach (var image in Model.Images)
+                            {
+                                <option value="@Json.Encode(image)" selected>@image.Url </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="line-light mt-3"></div>
+        <div class="list-img-preview mt-1">
+            <label>Thông tin ảnh</label>
+            <div class="">
+                <div class="row mx-0 align-items-center headerList py-3">
+                    <div class="col-1 font-weight-bold text-center p-0">Ảnh</div>
+                    <div class="col-3 font-weight-bold text-center">Tên mô tả</div>
+                    <div class="col-3 font-weight-bold text-center">Link</div>
+                    <div class="col-1 font-weight-bold text-center">Link Option</div>
+                    <div class="col-2 font-weight-bold text-center">Thẻ alt</div>
+                    <div class="col-1 font-weight-bold text-center">Độ ưu tiên</div>
+                    <div class="col-1 font-weight-bold text-center">Clear</div>
+                </div>
+                <div class="border ListImgContainer">
+                    @if (!Model.Images.IsNullOrEmpty())
+                    {
+                        var images = Model.Images;
+                        for (int i = 0; i < images.Count; i++)
+                        {
+                            var img = @APIMediaConfig.APIMediaShowContentDefault + images[i].Url;
+                            <div class="mt-2 row align-items-center imgListItem">
+                                <div class="col-1 text-center" data-toggle="tooltip" data-placement="top" data-original-title="@images[i].Url">
+                                    <a href="@img" target="_blank">
+                                        <img class="imgSmall3" src="@img" alt="@images[i].Alt" />
+                                    </a>
+                                </div>
+                                <div class="col-3"><input class="form-control name" name="images[@i].name" value="@images[i].Name.FilterStrict()" /></div>
+                                <div class="col-3">
+                                    @*<input class="form-control" name="images[@i].link" value="@images[i].Link.FilterStrict()" />*@
+                                    @Input.SelectLinkInImage(images[i].Link.FilterStrict(), images[i].Link.FilterStrict(), $"images[{i}].link")
+                                </div>
+                                <div class="col-1">
+                                    <select class="cursor-pointer form-control linkOption" name="images[@i].linkOption">
+                                        <option value="@((int)EnumCommonCode.EnumLinkOption.no)"
+                                                @(images[i].LinkOption == (int)EnumCommonCode.EnumLinkOption.no ? "selected" : "")>
+                                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumLinkOption.no)
+                                        </option>
+                                        <option value="@((int)EnumCommonCode.EnumLinkOption.nofollow)"
+                                                @(images[i].LinkOption == (int)EnumCommonCode.EnumLinkOption.nofollow ? "selected" : "")>
+                                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumLinkOption.nofollow)
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-2"><input class="form-control alt" name="images[@i].alt" value="@images[i].Alt.FilterStrict()" /></div>
+                                <div class="col-1"><input type="number" min="0" class="form-control idx" name="images[@i].idx" value="@(images[i].Idx == 0 ? "" : images[i].Idx.ToString() )" /></div>
+                                <div class="col-1 text-center">
+                                    <button type="button" class="clearListImg bg-transparent border-0" data-url="@images[i].Url">
+                                        <i class="flaticon2-cancel-music"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" class="type" name="images[@i].type" value="1" />
+                                <input type="hidden" class="Url" name="images[@i].url" value="@images[i].Url" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer mt-4">
+        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+    </div>
+}

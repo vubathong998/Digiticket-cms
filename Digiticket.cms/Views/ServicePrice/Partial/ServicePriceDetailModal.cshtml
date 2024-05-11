@@ -1,0 +1,165 @@
+﻿@using Infrastructure.Extensions;
+@using DigiticketCMS.Models.ServicePrice;
+@using DigiticketCMS.Config;
+@model ServicePriceViewToViewModel
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="modal-header pl-0">
+                <h1 class="modal-title">ServicePrice <span class="text-success">@Model.Name</span></h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @* content *@
+            <div id="content row">
+                <div class="col-12 col-md-6 mb-2 mt-4">
+                    <label>Tên giai đoạn</label>
+                    <input class="form-control" value="@Model.Name" />
+                </div>
+                <div class="line-light col-12 w-98p m-3"></div>
+                <div class="col-12 mt-2">
+                    <h5>Thời gian áp dụng: </h5>
+                </div>
+                <div class="col-12 row mt-3">
+                    <div class="col-12 col-sm-3">
+                        <input type="radio" id="pricesTimeRange" class="cursor-pointer" name="pricesTime" @((int)EnumPriceTimeType.RangeTime == Model.PricesTime.TimeType ? "checked" : "") />
+                        <label for="pricesTimeRange" class="nBold cursor-pointer">Trong khoảng thời gian</label>
+                    </div>
+                    <div class="col-12 col-sm-9 row">
+                        <div class="col-12 col-md-4">
+                            <label class="nBold">Ngày bắt đầu:</label>
+                            <div>
+                                <input class="form-control" name="pricesTime.beginDate" value="@(Model.PricesTime != null ? Model.PricesTime.BeginDate != null ? Model.PricesTime.BeginDate.ToString("dd/MM/yyyy") : "" : "")" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label class="nBold">Ngày kết thúc:</label>
+                            <div>
+                                <input class="form-control" name="pricesTime.beginDate" value="@(Model.PricesTime != null ? Model.PricesTime.EndDate != null ? Model.PricesTime.EndDate.ToString("dd/MM/yyyy") : "" : "")" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 ">
+                            <label class="nBold">Với các ngày trong tuần:</label>
+                            <div class="">
+                                @if (Model.PricesTime != null)
+                                {
+                                    if (!Model.PricesTime.ListDayOfWeek.IsNullOrEmpty())
+                                    {
+                                        for (int i = 0; i < 7; i++)
+                                        {
+                                            string dayString;
+                                            if (i == 6)
+                                            {
+                                                dayString = "CN";
+                                            }
+                                            else
+                                            {
+                                                dayString = $"T{i + 2}";
+                                            }
+                                            <input name="pricesTime.listDayOfWeek[@i]" class="mr-2" type="checkbox" @(Model.PricesTime.ListDayOfWeek[i] == 1 ? "checked" : "") /><label class="mr-3 font-size-1e2">@dayString</label>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <input type="radio" class="cursor-pointer" id="pricesTimeFixed" name="pricesTime" @((int)EnumPriceTimeType.FixedDates == Model.PricesTime.TimeType ? "checked" : "") />
+                        <label for="pricesTimeFixed" class="nBold cursor-pointer">Chọn ngày cố định</label>
+                    </div>
+
+                    @{
+                        string listDate__str = "";
+                        if (Model.PricesTime.ListDate.IsNullOrEmpty())
+                        {
+                            foreach (var item in Model.PricesTime.ListDate)
+                            {
+                                listDate__str += "," + item.ToString("mm/dd/yyyy");
+                            }
+                        }
+                    }
+                    <div class="col-12 col-md-9 row mt-3">
+                        <div class="col-12">
+                            <label class="nBold">Cho phép chọn nhiều ngày riêng lẻ</label>
+                            <input class="form-control" value="@listDate__str" />
+                        </div>
+                    </div>
+                </div>
+                <div class="line-light col-12 w-98p m-3"></div>
+
+                <div class="col-12 col-md-2">
+                    <label>Ngày đóng dịch vụ:</label>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-12 col-md-3"></div>
+                    <div class="col-12 col-md-9 row">
+                        <div class="col-12">
+                            <label class="nBold">Cho phép chọn nhiều ngày riêng lẻ</label>
+                            @{
+                                string listDateOff__str = "";
+                                if (Model.PricesTime.ListDate.IsNullOrEmpty())
+                                {
+                                    foreach (var item in Model.PricesTime.ListDateOff)
+                                    {
+                                        listDateOff__str += "," + item.ToString("mm/dd/yyyy");
+                                    }
+                                }
+                            }
+                            <input class="form-control" value="@listDateOff__str" />
+                        </div>
+                        @*<button class="btn btn-success mt-2">
+                                <i class="la la-plus"></i>
+                                Thêm thời gian
+                            </button>*@
+                    </div>
+                </div>
+                <div class="line-light col-12 w-98p m-3"></div>
+                @*<div class="col-12">
+                        <button class="btn btn-primary">Áp dụng cho các gói dịch vụ</button>
+                    </div>*@
+                <div class="col-12">
+                    @if (!Model.ListPrices.IsNullOrEmpty())
+                    {
+                        <table class="table">
+                            <tr>
+                                <td class="w-20p">Tên các gói dịch vụ</td>
+                                <td>Giá gốc</td>
+                                <td>Giá bán đề xuất</td>
+                                <td>Chiết khấu</td>
+                                <td>Tỷ lệ</td>
+                                <td>Giá bán lẻ</td>
+                            </tr>
+                            @foreach (var item in Model.ListPrices)
+                            {
+                                <tr>
+                                    <td>@item.GroupServiceName</td>
+                                    <td>@(item.CostPrice != null ? ((double)item.CostPrice).ToCurrency() : "")</td>
+                                    <td>@(item.SalePrice != null ? ((double)item.SalePrice).ToCurrency() : "")</td>
+                                    <td>
+                                        @(item.CommissionValue != null ? item.CommissionValue.ToString() : "")
+                                    </td>
+                                    <td>
+                                        @if (item.CommissionUnit != 0)
+                                        {
+                                            <span>
+                                                @(EnumCommonCode.GetDisplayNameEnum<EnumCommonCode.EnumCommissionUnit>((EnumCommonCode.EnumCommissionUnit)item.CommissionUnit))
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@(item.EndUsedPrice != null ? ((double)item.EndUsedPrice).ToCurrency() : "")</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
+            </div>
+
+            <div class="ml-4 mr-4 mt-3 modal-footer">
+            </div>
+            @* end: content *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>

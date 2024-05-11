@@ -1,0 +1,29 @@
+﻿@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 38.4rem) !important;
+    }
+    /*need to fix*/
+    /* #defaultModalContent .modal-body {
+        overflow: scroll;
+        height: calc(100vh - 16.3rem);
+    } */
+    .ListImgContainer {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: calc(100vh - 46.9rem);
+    }
+}
+@media screen and (min-width: 1400px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 33.6rem) !important;
+    }
+    .ListImgContainer {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: calc(100vh - 43rem);
+    }
+    /* #defaultModalContent .modal-body {
+        overflow: scroll;
+        height: calc(100vh - 16.3rem);
+    } */
+}

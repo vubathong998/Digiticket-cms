@@ -1,0 +1,108 @@
+﻿@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Extensions;
+@using Infrastructure.Config;
+@using Services.Models.Responses.Content;
+@model List<PageComponentResponse>
+
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <div class="w-25 mb-2">
+            <button class="updateIdx btn btn-success disabled cursor-not-allowed">Cập nhật lại idx</button>
+            <span class="ml-3 cursor-help" data-toggle="tooltip"
+                  title="Có thể sửa Idx bằng cách kéo thả Page Component trong danh sách. Càng ở trên cao thì độ ưu tiên càng cao.
+                  (Việc làm này giống hệt như nhấn vào hình cái bút ở cột sửa rồi sửa Idx!)">(?)</span>
+        </div>
+        <table class="table border pageTemplateTable table-bordered">
+            <thead class="headerList">
+                <tr>
+                    <th data-toggle="tooltip"
+                        title="Tên của Page component (phần cắt ngang). Nhấn vào tên để thiết lập cho nội dung bên trong Page component (phần cắt ngang).">
+                        Tên (?)
+                    </th>
+                    <th>Template Component Name</th>
+                    <th>ViewName</th>
+                    <th>TypeName</th>
+                    <th>Idx</th>
+                    @*<th>HtmlClass</th>
+                        <th>HtmlId</th>
+                        <th>LinkStyles</th>
+                        <th>LinkScripts</th>*@
+                    <th data-toggle="tooltip" title="Phải ở trạng thái 'Public' thì Page component (phần cắt ngang) này mới được hiện lên trên page">Trạng thái (?)</th>
+                    <th>Sửa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.IsNullOrEmpty())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="cursor-all-scroll">
+                            <td>
+                                <input type="hidden" value="@item.Id" class="id" />
+                                <div>
+                                    <a href="@Url.Action("PageComponentDetail", "landingPage", new {id = item.Id})" target="_blank">@item.Name</a>
+                                </div>
+                            </td>
+                            <td>@item.TemplateComponentName</td>
+                            <td>@item.ViewName</td>
+                            <td>@item.TypeName</td>
+                            <td>@item.Idx</td>
+                            @*<td>@item.HtmlClass</td>
+                                <td>@item.HtmlId</td>
+                                <td>@String.Join(", ", item.LinkStyles)</td>
+                                <td>@String.Join(", ", item.LinkScripts)</td>*@
+                            <td>
+                                <select class="updateStatus selectInTable" data-id="@item.Id">
+                                    <option value="0 @(item.Status == 0 ? "selected" : "")">Chưa chọn</option>
+                                    <option value="@((int)EnumCommonCode.EnumPageComponentStatus.Public)"
+                                            @((int)EnumCommonCode.EnumPageComponentStatus.Public == item.Status ? "selected" : "")>
+                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentStatus.Public)
+                                    </option>
+                                    <option value="@((int)EnumCommonCode.EnumPageComponentStatus.UnPublic)"
+                                            @((int)EnumCommonCode.EnumPageComponentStatus.UnPublic == item.Status ? "selected" : "")>
+                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentStatus.UnPublic)
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <button type="button" class="btn p-0" onclick="pageComponent.onShowPageComponentAddModal(`@item.Id`, `@item.ViewImage`)">
+                                        <i class="font-size-1r4 text-success flaticon2-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            @*<td>
+                                    <div class="text-center">
+                                        <button type="button" class="btn p-0" onclick="pageComponentItems.onLoadAddModal(`@item.Id`)">
+                                            <i class="font-size-1r4 text-primary flaticon2-files-and-folders"></i>
+                                        </button>
+                                    </div>
+                                </td>*@
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="parttenImg">
+            <label>Ảnh mẫu</label>
+            @foreach (var item in Model)
+            {
+                if (item.ViewImage.IsTrueOrFalse())
+                {
+                    <div class="border mt-2 @((int)EnumCommonCode.EnumPageComponentStatus.Public == item.Status ? "" : "display-none")">
+                        <img src="@APIMediaConfig.APIMediaShowContentDefault@item.ViewImage" class="img-width-fit" />
+                    </div>
+                }
+                else
+                {
+                    <div class="border">
+                        <h3>Page Component <span class="text-info">@item.Name</span> chưa có ảnh mẫu</h3>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

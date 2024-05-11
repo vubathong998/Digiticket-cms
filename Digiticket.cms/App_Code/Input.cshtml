@@ -1,0 +1,14 @@
+﻿@using DigiticketCMS.Helpers;
+
+@helper SelectLinkInImage(string imageValue = "", string imageText = "", string nameInput = "link")
+{
+    <div class="linkInImage">
+        <select class="form-control select-LinkInImage">
+            @if (imageValue != null && imageText != null)
+            {
+                <option value="@imageValue" selected>@imageText</option>
+            }
+        </select>
+        <input type="hidden" name="@nameInput" class="linkInput" value="@(imageValue.IsTrueOrFalse() ? imageValue : "")" />
+    </div>
+}

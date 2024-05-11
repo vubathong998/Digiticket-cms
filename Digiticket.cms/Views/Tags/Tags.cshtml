@@ -1,0 +1,193 @@
+﻿@using DigiticketCMS.Models.Tags;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using DigiticketCMS.Config;
+@model ProductTagsAddModalViewModel
+@{
+    bool IsReadOnly = Model.ParentId == 0;
+    ViewBag.Title = string.IsNullOrEmpty(Model.ParentName) ? "Tags" : "Subtags của " + Model.ParentName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles {
+    <link href="~/Content/css/tags/tags.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/plugins/select2/css/select2-bootstrap.min.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Tags
+                        @if (!string.IsNullOrEmpty(Model.ParentName))
+                        {
+                            <span class="text-success">(parent: @Model.ParentName)</span>
+                        }
+                    </h3>
+                </div>
+                @if (User.CheckPermission(Permission.TagsAdd))
+                {
+
+
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+                            <div class="kt-portlet__head-actions">
+                                <div class=" text-right">
+                                    @if (IsReadOnly)
+                                    {
+                                        <a href="@Url.Action("TagsAddModal", "Tags", new {parentId = 0})" class="onValidateAdd btn btn-primary btn-elevate btn-icon-sm"
+                                           data-modal="" data-modal-size="modal-lg" data-callback="TagsGetByPage.onSelect2Modal();TagsGetByPage.onValidateAdd();">
+                                            <i class="la la-plus"></i>
+                                            Thêm mới parent Tags
+                                        </a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("TagsAddModal", "Tags",
+                                                new {
+                                                parentId = Model.ParentId,
+                                                categoryName = Model.CategoryName,
+                                                categoryId = Model.CategoryId,
+                                                destinationName = Model.DestinationName,
+                                                destinationId = Model.DestinationId,
+                                                parentName = Model.ParentName,
+                                                type = Model.Type
+                                            })" class="onValidateAdd btn btn-primary btn-elevate btn-icon-sm"
+                                           data-modal="" data-modal-size="modal-lg" data-callback="TagsGetByPage.onSelect2Modal();TagsGetByPage.onValidateAdd();">
+                                            <i class="la la-plus"></i>
+                                            Thêm mới sub Tags
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @* content table *@
+            <div class="kt-portlet__body">
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer table-Tags">
+                    <div class="row headerTable pl-3">
+                        <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                            <div class="col-12 col-sm-5">
+                                <div class="dataTables_length">
+
+                                </div>
+                            </div>
+                        </div>
+                        @FilterHelper.ClearFilter()
+                        @FilterHelper.FindName("col-12 col-md-3")
+                        @if (IsReadOnly)
+                        {
+                            @FilterHelper.Category(Model.Categories)
+                            @FilterHelper.destination(Model.Destinations)
+                            @FilterHelper.Type()
+                        }
+                        else
+                        {
+                            <div class="col-sm-6">
+                            </div>
+                        }
+                        <div class="convertPage col-sm-12 col-md-1">
+                            <label class="mr-2">Tags home</label>
+                            <div class="">
+                                <a href="@Url.Action("tags", "tags")" class="btnConvertPage btn btn-info"><i class="fa fa-home"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="html_table_Tags">
+                                <thead class="">
+                                    <tr>
+                                        <th class="sortable" data-field="name">Tên</th>
+                                        <th data-field="parentName">Parent tags</th>
+                                        <th data-field="categoryName">Danh mục</th>
+                                        <th data-field="destinationName">Điểm đến</th>
+                                        <th data-field="type">Loại</th>
+                                        <th data-field="textView">Text View</th>
+                                        <th class="sortable">Idx</th>
+                                        @*<th data-field="idx">Idx</th>*@
+                                        <th>Thêm subTags</th>
+                                        <th>Xem sub</th>
+                                        <th class="sortable" data-field="CreatedDate">Ngày tạo</th>
+                                        <th class="sortable" data-field="createdByName">Người tạo</th>
+                                        <th class="sortable cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                        <th class="sortable cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>
+                                        @*<th title="Chi tiết">Sửa</th>*@
+                                        @*<th>Xóa</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="dataTables_info">
+
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* end: content table *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts{
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/select2/js/select2.full.min.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/tags/tagsGetByPage.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/tags/tagsModal.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/tags/tagsUpDateIdxModal.js?v=@SystemVersion.VersionJS"></script>
+
+    <script>
+        var permission = {
+            add: '@User.CheckPermission(Permission.TagsAdd)' === 'True' ? true : false,
+            edit: '@User.CheckPermission(Permission.TagsEdit)' === 'True' ? true : false
+        }
+
+        key = `@Model.Keyfilter`;
+        categoryId = `@Model.CategoryId`;
+        destinationId = `@Model.DestinationId`;
+        parentId = `@Model.ParentId`;
+        hardExpandVar.parentId = `@Model.ParentId`;
+        TagsGetByPage.init();
+    </script>
+}

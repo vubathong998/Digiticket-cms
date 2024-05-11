@@ -1,0 +1,176 @@
+﻿@media (min-width: 1024px) {
+    .modal-xl {
+        max-width: calc(100% - 20px) !important;
+    }
+}
+
+.dp-none {
+    display: none
+}
+
+.pointer {
+    cursor: pointer
+}
+
+.select2 {
+    width: 100% !important
+}
+
+/* .kt-badge.kt-badge--danger {
+    background: rgba(255, 0, 0, 0.7) !important
+} */
+
+.text-danger {
+    color: rgba(255, 0, 0, 0.7) !important
+}
+
+.tab-content > form > .tab-pane,
+.pill-content > form > .pill-pane {
+    display: none;
+}
+
+.tab-content > form > .active,
+.pill-content > form > .active {
+    display: block;
+}
+
+.dataTables_wrapper .dataTable {
+    margin-top: 0 !important;
+}
+
+.dataTables_wrapper thead {
+    background-color: rgba(255, 203, 62, 0.70)
+}
+    /*.dataTables_wrapper thead th {color:#fff!important}*/
+    .dataTables_wrapper thead th.sortable {
+        padding-right: 30px;
+        position: relative;
+        cursor: pointer
+    }
+
+        .dataTables_wrapper thead th.sortable::before,
+        .dataTables_wrapper thead th.sortable::after {
+            position: absolute;
+            display: block;
+            opacity: 0.35;
+            bottom: calc(50% - 8px);
+            height: 16px;
+            line-height: 14px;
+            font-size: 16px
+        }
+
+        .dataTables_wrapper thead th.sortable::before {
+            right: 12px;
+            content: "\2191"
+        }
+
+        .dataTables_wrapper thead th.sortable::after {
+            right: 6px;
+            content: "\2193"
+        }
+
+        .dataTables_wrapper thead th.sortable.asc::before,
+        .dataTables_wrapper thead th.sortable.desc::after {
+            opacity: 1
+        }
+
+.dataTables_wrapper tbody {
+    background-color: #fafafa
+}
+
+.dataTables_wrapper .kt-checkbox > span {
+    left: 6px;
+}
+
+.kt-header__brand {
+    height: 60px;
+}
+
+    .kt-header__brand img {
+        height: 50px;
+    }
+
+.kt-header-mobile img {
+    height: 50px;
+}
+
+.kt-aside-menu .kt-menu__nav > .kt-menu__item > .kt-menu__link {
+    padding: 5px 20px;
+}
+
+.kt-portlet .kt-portlet__head {
+    padding: 0 15px;
+    background-color: rgba(255, 203, 62, 0.70)
+}
+
+.kt-portlet .kt-portlet__body {
+    padding: 15px;
+}
+
+.card-title:not(.collapsed) {
+    background-color: rgba(255, 203, 62, 0.70);
+}
+
+.form-suggest-result {
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+    position: absolute;
+    min-height: 200px;
+    width: 100%;
+    padding: 15px;
+    background-color: #fff;
+    top: 70px;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 1025px) {
+    .kt-container {
+        padding: 0 15px;
+    }
+
+    .kt-header {
+        height: 60px;
+    }
+
+    .kt-header__brand {
+        width: 60px;
+    }
+
+    .kt-aside--fixed .kt-aside {
+        top: 60px;
+    }
+
+    .kt-aside--minimize .kt-aside {
+        width: 60px;
+    }
+
+    .kt-aside--fixed.kt-aside--minimize .kt-wrapper {
+        padding-left: 60px;
+    }
+
+    .kt-aside--fixed.kt-aside--minimize-hover .kt-wrapper {
+        padding-left: 60px;
+    }
+
+    .kt-header--fixed .kt-wrapper {
+        padding-top: 75px;
+    }
+}
+
+.kt-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/*hide sort of dataTable*/
+.dataTables_scrollBody th.sortable::before,
+.dataTables_scrollBody th.sortable::after {
+    display: none !important;
+}
+
+li.select2-container--default .select2-results__option.select2-results__option--highlighted {
+    background-color: #eeeeee;
+}

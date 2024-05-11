@@ -1,0 +1,86 @@
+﻿@using Services.Models.Responses.Content;
+@model TemplateComponentResponse
+
+@{
+    var isReadOnly = Model.Id == 0;
+}
+@using (Html.BeginForm(isReadOnly ? "TemplateComponentAdd" : "TemplateComponentEdit", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "TemplateComponentAddOrUpdate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    if (!isReadOnly)
+    {
+        <input name="id" value="@Model.Id" type="hidden" />
+    }
+    <div class="modal-header">
+        <h1 class="modal-title">
+            @if (isReadOnly)
+            {
+                <span>Thêm mới Template component</span>
+            }
+            else
+            {
+                <span>Sửa Template component <span class="text-success">@Model.Name</span></span>
+            }
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+            <input class="form-control" name="name" value="@(isReadOnly ? "" : Model.Name)" />
+        </div>
+        <div class="mt-4">
+            <label for="Description">Mô tả</label><label class="text-red error ml-5" for="Description"></label>
+            <input class="form-control" name="Description" value="@(isReadOnly ? "" : Model.Description)" />
+        </div>
+        @if (isReadOnly)
+        {
+            <div class="mt-4">
+                <label for="ViewName">ViewName</label><label class="text-red error ml-5" for="ViewName"></label>
+                <input class="form-control" name="ViewName" />
+            </div>
+            <div class="mt-4">
+                <label for="selectType">Type</label><label class="text-red error ml-5" for="selectType"></label>
+                <select class="form-control select-type" name="selectType" id="selectType"></select>
+                <input type="hidden" class="place d-none" name="type" id="type" />
+            </div>
+        }
+        <div class="mt-4">
+            <label for="ViewImage">ViewImage</label><label class="text-red error ml-5" for="ViewImage"></label>
+            <select class="form-control select-img" id="ViewImage">
+                @if (!isReadOnly)
+                {
+                    <option value="@Model.ViewImage" selected>@Model.ViewImage</option>
+                }
+            </select>
+            <input type="hidden" class="place d-none" name="ViewImage" id="imgInput" />
+        </div>
+        <div class="mt-4">
+            <label for="DefaultHtmlClass">DefaultHtmlClass</label><label class="text-red error ml-5" for="DefaultHtmlClass"></label>
+            <input class="form-control" name="DefaultHtmlClass" value="@(isReadOnly ? "" : Model.DefaultHtmlClass)" />
+        </div>
+        <div class="mt-4">
+            <label for="DefaultHtmlId">DefaultHtmlId</label><label class="text-red error ml-5" for="DefaultHtmlId"></label>
+            <input class="form-control" name="DefaultHtmlId" value="@(isReadOnly ? "" : Model.DefaultHtmlId)" />
+        </div>
+        <div class="mt-4">
+            <label for="DefaultLinkStyles">DefaultLinkStyles</label><label class="text-red error ml-5" for="DefaultLinkStyles"></label>
+            <input class="custom-tag" name="DefaultLinkStyles" value="@(isReadOnly ? "" : String.Join(",", Model.DefaultLinkStyles))" id="DefaultLinkStyles">
+        </div>
+        <div class="mt-4">
+            <label for="DefaultLinkScripts">DefaultLinkScripts</label><label class="text-red error ml-5" for="DefaultLinkScripts"></label>
+            <input class="custom-tag" name="DefaultLinkScripts" value="@(isReadOnly ? "" : String.Join(",", Model.DefaultLinkScripts))" id="DefaultLinkScripts">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

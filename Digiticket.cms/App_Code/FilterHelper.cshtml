@@ -1,0 +1,150 @@
+﻿@using Services.Models.Responses.Lib;
+@using System.Collections.Generic;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+
+@helper ClearFilter(string ClassName = "", string field = "")
+{
+    ClassName = ClassName.IsTrueOrFalse() ? ClassName : "col-12 col-lg-1 p-0 px-lg-2";
+    <div class="@ClassName">
+        <label data-toggle="tooltip"
+               data-placement="top"
+               title="Xóa toàn bộ tất cả các bộ lọc">Clear filter (?):</label>
+        <div>
+            <button class="clearFilter btn border background-cyan" data-field="@field">
+                Xóa bộ lọc
+                <i class="fa fa-magic"></i>
+            </button>
+        </div>
+    </div>
+}
+
+@helper FindName(string ClassName = "col-sm-12 col-lg-4 p-0 px-lg-2")
+{
+    <div class="@ClassName">
+        <label>Tìm kiếm tên:</label>
+        <input name="key" placeholder="Nhập tên" class="form-control hightLight" />
+    </div>
+}
+
+@helper Status()
+{
+    <div class="col-sm-12 col-lg-2 p-0 px-lg-2 p-0 px-lg-2">
+        <label>Lọc theo trạng thái:</label>
+        <select class="select-status form-control cursor-pointer hightLight">
+            <option value="">Tất cả</option>
+            <option value="0">Chưa thiết lập</option>
+            <option value="@((int)EnumCommonCode.ETagsStatusProduct.Available)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsStatusProduct.Available)</option>
+            <option value="@((int)EnumCommonCode.ETagsStatusProduct.Planning)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsStatusProduct.Planning)</option>
+            <option value="@((int)EnumCommonCode.ETagsStatusProduct.CurrentlyOutOfStock)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsStatusProduct.CurrentlyOutOfStock)</option>
+            <option value="@((int)EnumCommonCode.ETagsStatusProduct.SetOutOfStock)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsStatusProduct.SetOutOfStock)</option>
+        </select>
+    </div>
+}
+
+@helper Public()
+{
+    <div class="FilterAsPublic col-sm-12 col-lg-1 p-0 px-lg-2">
+        <label data-toggle="tooltip"
+               data-placement="top"
+               title="Lọc theo public">
+            Lọc theo public:
+        </label>
+        <select class="select-public form-control cursor-pointer hightLight">
+            <option value="">Tất cả</option>
+            <option value="true">Có public</option>
+            <option value="false">Không public</option>
+        </select>
+    </div>
+}
+
+@helper Type()
+{
+    <div class="col-12 col-lg-2 p-0 px-lg-2 px-lg-2">
+        <label>Lọc theo loại</label>
+        <select class="select-type form-control cursor-pointer hightLight">
+            <option value="">Không lọc</option>
+            <option value="0">Chưa chọn loại</option>
+            <option value="@((int)EnumCommonCode.ETagsItemType.Product)">
+                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.Product)
+            </option>
+            <option value="@((int)EnumCommonCode.ETagsItemType.GroupService)">
+                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupService)
+            </option>
+            <option value="@((int)EnumCommonCode.ETagsItemType.GroupServiceProcess)">
+                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupServiceProcess)
+            </option>
+            <option value="@((int)EnumCommonCode.ETagsItemType.ProductHighlight)">
+                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.ProductHighlight)
+            </option>
+            <option value="@((int)EnumCommonCode.ETagsItemType.GroupServiceView)">
+                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupServiceView)
+            </option>
+        </select>
+    </div>
+}
+
+@helper Category(List<SubCategoryResponse> categories)
+{
+    <div class="col-sm-12 col-lg-2 p-0 px-lg-2 px-lg-2">
+        <label>Lọc theo danh mục:</label>
+        <select class="cursor-pointer kt-select2-categories form-control hightLight">
+            <option value="null">Tất cả</option>
+            @if (!categories.IsNullOrEmpty())
+            {
+                foreach (var category in categories)
+                {
+                    <optgroup label="@category.Name">
+                        @if (!category.SubCategory.IsNullOrEmpty())
+                        {
+                            foreach (var subCategory in category.SubCategory)
+                            {
+                                <option value="@subCategory.Id">@subCategory.Name</option>
+                            }
+                        }
+                    </optgroup>
+                }
+            }
+        </select>
+    </div>
+}
+
+@helper destination(IEnumerable<LibDestinationResponse> destinations)
+{
+    <div class="col-sm-12 col-lg-2 p-0 px-lg-2 px-lg-2">
+        <label>Lọc theo điểm đến:</label>
+        <select class="kt-select2-destination form-control cursor-pointer hightLight">
+            <option value="null">Tất cả</option>
+            @if (!destinations.IsNullOrEmpty())
+            {
+                foreach (var destination in destinations)
+                {
+                    <option value="@destination.Id">@destination.Name</option>
+                }
+            }
+        </select>
+    </div>
+}
+
+@helper bannerType()
+{
+    <div class="filterBannerTypeContainer col-sm-12 col-lg-2 p-0 px-lg-2 hightLight">
+        <label>Lọc theo banner type:</label>
+        <select class="filterBannerType form-control"></select>
+    </div>
+}
+
+@helper selectIsHome()
+{
+    <div class="col-sm-12 col-lg-2 p-0 px-lg-2">
+        <label>
+            Lọc theo is home:
+        </label>
+        <select class="select-isHome form-control cursor-pointer hightLight">
+            <option value="">Tất cả</option>
+            <option value="true">Có</option>
+            <option value="false">Không</option>
+        </select>
+    </div>
+}

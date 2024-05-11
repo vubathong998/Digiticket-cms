@@ -1,0 +1,176 @@
+﻿@using Infrastructure.Config;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Models.GroupService
+@model GroupServiceResponseViewModel
+
+@{
+    var GroupService = Model.GroupServiceResponse;
+    var AllParentTags = Model.AllParentTags;
+    var AllParentTagsLength = AllParentTags.Count;
+    var AllSubTags = Model.AllSubTags;
+    var AllSubTagsLength = Model.AllSubTags.Count;
+}
+
+<div class="BaseInfo py-3 border" id="groupServiceUpdateTagsInfo">
+    <div class="col-12 ml-1" id="select-tags">
+        <label>Tag đã chọn</label>
+        @using (Html.BeginForm("GroupServiceUpdateTags", "GroupService", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data",
+            @class = "kt-form ajax-form",
+            @id = "groupServiceUpdateTagsInfoForm",
+            spellcheck = false,
+            showLoading = true
+        }))
+        {
+            <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+            <div class="tagSelected border p-1 pt-0">
+                @for (int i = 0; i < GroupService.Tags.Count; i++)
+                {
+                    var item = GroupService.Tags[i];
+
+                    <div class="tagSelected--item border mt-1 cursor-pointer"
+                         onclick="GroupServiceDetail.onFindCurrentSubItemTag(this);">
+                        @item.Name
+                        <button type="button"
+                                data-id="@item.Id"
+                                class="clearGroupServiceTagBtn border-0 bg-transparent"
+                                onclick="GroupServiceDetail.onClearGroupServiceTags(this);">
+                            <i class="font-size-0r8 ml-1 flaticon2-cancel-music"></i>
+                        </button>
+                        <input type="hidden" class="Id" value="@item.Id" name="Tags[@i].Id" />
+                        <input type="hidden" class="ParentId" value="@item.ParentId" name="Tags[@i].ParentId" />
+                        <input type="hidden" class="CategoryId" value="@item.CategoryId" name="Tags[@i].CategoryId" />
+                        <input type="hidden" class="DestinationId" value="@item.DestinationId" name="Tags[@i].DestinationId" />
+                        <input type="hidden" class="TextView" value="@item.TextView" name="Tags[@i].TextView" />
+                        <input type="hidden" class="TextLink" value="@item.TextLink" name="Tags[@i].TextLink" />
+                        <input type="hidden" class="Name" value="@item.Name" name="Tags[@i].Name" />
+                        <input type="hidden" class="Type" value="@item.Type" name="Tags[@i].Type" />
+                        <input type="hidden" class="Idx" value="@item.Idx" name="Tags[@i].Idx" />
+                    </div>
+
+                }
+            </div>
+        }
+        <div class="tagPlace row">
+            <div class="col-4 mt-4 border-right pr-0">
+                @for (int i = 0; i < AllParentTagsLength; i++)
+                {
+                    var item = AllParentTags[i];
+                    <div class="itemParentTags cursor-pointer border-left pl-4 pb-2 font-weight-bold border-top pt-2@(i == AllParentTagsLength - 1 ? " border-bottom pb-2" : "")"
+                         data-id="@item.Id"
+                         onclick="GroupServiceDetail.onShowSubTags(this, @item.Id);">
+                        <div class="itemParentTagsName d-inline-block">
+                            @item.Name
+                        </div>
+                        <button type="button" class="border-0 bg-transparent">
+                            <i class="flaticon2-right-arrow"></i>
+                        </button>
+                        <div class="blindfoldBorderRight" data-value="@Json.Encode(item)"></div>
+                    </div>
+
+                }
+            </div>
+            <div class="subTagsContainer col-4 border-right border-top border-bottom mt-4">
+                <div class="controlSubTags mb-3">
+                    <div class="w-80p d-inline-block">
+                        <input class="form-control" placeholder="Nhập để tìm kiếm sub Tags" onkeyup="GroupServiceDetail.onfilterSubTags(this);" />
+                    </div>
+                    @if (User.CheckPermission(Permission.TagsAdd))
+                    {
+                        <div class="w-20px d-inline-block">
+                            <button type="button" class="btn ml-2" title="Thêm mới sub Tag" onclick="GroupServiceDetail.onAddSubTags(this);">
+                                <i class="font-size-2r flaticon2-add"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+                @for (int i = 0; i < AllParentTagsLength; i++)
+                {
+                    var item = AllParentTags[i];
+                    var subitems = AllSubTags.Where(t => t.ParentId == item.Id).ToList();
+                    <div class="itemSubItems" data-id="@item.Id">
+                        @if (AllSubTags.Any(t => t.ParentId == item.Id))
+                        {
+                            foreach (var subItem in subitems)
+                            {
+                                var isActive = GroupService.Tags.Any(t => t.Id == subItem.Id);
+                                <div class="lastSubItem pl-1"
+                                     data-id="@subItem.Id">
+                                    <input id="theGroupServiceTag-@subItem.Id"
+                                           class="updateSelectedCheckbox cursor-pointer"
+                                           data-value="@Json.Encode(subItem)"
+                                           type="checkbox"
+                                           @(isActive ? "checked" : "") onchange="GroupServiceDetail.onUpdateTagSelected(this);" />
+                                    <label for="theGroupServiceTag-@subItem.Id" class="p-0 m-0 pl-1 cursor-pointer font-weight-light">
+                                        @subItem.Name
+                                    </label>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="tagSelected--noneItem tagSelected--item mt-1">
+                                Không có Tag nào!
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="addSubTag col-4 border-right border-top border-bottom mt-4 p-3">
+                @using (Html.BeginForm("Add", "Tags", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "servicePriceTagsAdd",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <input type="hidden" name="typeResponse" value="2" />
+                    <input type="hidden" class="parentId" name="ParentId" />
+                    <h3>Thêm mới sub Tag (parent: <span class="nameParentTags"></span>)</h3>
+                    <div class="">
+                        <label>Danh mục</label>
+                        <input readonly class="categoryName form-control" />
+                        <input type="hidden" name="categoryId" class="categoryId" />
+                    </div>
+                    <div class="mt-3">
+                        <label>Điểm đến</label>
+                        <input readonly class="destinationName form-control" />
+                        <input type="hidden" name="destinationId" class="destinationId" />
+                    </div>
+                    <div class="mt-3">
+                        <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                        <input type="text" class="form-control name" name="name" id="name" />
+                    </div>
+                    <div class="mt-3">
+                        <label for="textView">Ký tự hiển thị</label><label class="text-red error ml-5" for="textView"></label>
+                        <input type="text" class="form-control textView" name="textView" id="textView" />
+                    </div>
+                    <div class="mt-3">
+                        <label>Loại</label>
+                        <input readonly class="typeName form-control" />
+                        <input type="hidden" name="type" class="type" />
+                    </div>
+                    <div class="mt-3">
+                        <label for="idx">Index</label><label class="text-red error ml-5" for="idx"></label>
+                        <input min="0" type="number" class="form-control" name="idx" value="0" />
+                    </div>
+                    <input type="hidden" class="form-control" name="textLink" readonly />
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Thêm mới</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (User.CheckPermission(Permission.ProductEditGroupService))
+{
+    <div class="mt-3 ">
+        <button type="button" onclick="GroupServiceDetail.onSubmitServicePriceTags();" class="btn btn-success">Chỉnh sửa</button>
+    </div>
+}

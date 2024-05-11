@@ -1,0 +1,461 @@
+﻿@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Models.Content;
+@model PageComponentDetailToViewViewModel
+
+@{
+    var PageComponent = Model.PageComponentResponse;
+    ViewBag.Title = "PageComponent " + PageComponent.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link href="~/Content/plugins/jquery-ui/jquery-ui.bundle.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+
+    <link href="~/Content/css/landingPage/pageComponentDetail.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/css/landingPage/pageComponentItems.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+<input type="hidden" id="categoryId" value="@Model.CategoriesResponse" />
+<input type="hidden" id="destinationId" value="@PageComponent.DestinationId" />
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <input type="hidden" id="idPage" value="@PageComponent.Id" />
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Thông tin PageComponent <span class="text-success">@PageComponent.Name</span>
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="kt-portlet__head-actions">
+                            <div class="addPageComponentItemPlace display-none text-right">
+                                <button class="addComponentBtn btn btn-primary btn-elevate btn-icon-sm cursor-pointer"
+                                        data-toggle="modal"
+                                        data-target="#selectTypeModal">
+                                    <i class="la la-plus"></i>
+                                    Thêm page component item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <ul class="nav nav-tabs mb-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link show active" data-toggle="tab" href="#info">Thông tin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#pageComponentItems"
+                           title="Nhấn vào đây để xem danh các thành phần bên trong mặt cắt ngang (Page Component Item).
+                           Nếu lần đầu tiên tạo, thì nhấn vào 'Thêm page component' item bên trên bên phải">
+                            Page component items (?)
+                        </a>
+                    </li>
+                </ul>
+                <!-- Begin: Tab panes -->
+                <div class="tab-content mt-2">
+                    <div id="info" class="tab-pane show active">
+                        <div class="row">
+                            <div class="col-6">
+                                @using (Html.BeginForm("PageComponentEdit", "LandingPage", FormMethod.Post, new
+                                {
+                                    enctype = "multipart/form-data",
+                                    @class = "kt-form ajax-form",
+                                    @id = "PageAddOrUpdateModal",
+                                    spellcheck = false,
+                                    showLoading = true
+                                }))
+                                {
+                                    <input name="id" value="@PageComponent.Id" type="hidden" />
+                                    <div class="PageComponentDetailPlace">
+                                        <div class="">
+                                            <label for="name" data-toggle="tooltip" class="cursor-help"
+                                                   title="Điền gì vào trường này thì khu vực 'Tên' ngay cạnh khung màu đỏ trong mẫu ảnh bên phải sẽ thay đổi theo.
+                                                   Nếu mẫu ảnh bên phải không có 'Tên' nào thì tên không hiện lên giao diện">
+                                                Tên (?)
+                                            </label><label class="text-red error ml-5" for="name"></label>
+                                            <input type="text" class="form-control" name="name" value="@PageComponent.Name" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="Description" data-toggle="tooltip" class="cursor-help"
+                                                   title="Giống như tên. Điền gì vào mô tả thì điền gì vào trường mô tả này thì khu vực 'Mô tả'
+                                                   ngay cạnh khung màu đỏ sẽ thay đổi theo">
+                                                Mô tả (?)
+                                            </label><label class="text-red error ml-5" for="Description"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="Description" id="Description">@PageComponent.Description</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+                                            <input type="number" min="0" class="form-control" name="Idx" value="@PageComponent.Idx" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="HtmlContent">HtmlContent</label><label class="text-red error ml-5" for="HtmlContent"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="HtmlContent" id="HtmlContent">@PageComponent.HtmlContent</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="HtmlClass">HtmlClass</label><label class="text-red error ml-5" for="HtmlClass"></label>
+                                            <input type="text" class="form-control" name="HtmlClass" value="@PageComponent.HtmlClass" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="HtmlId">HtmlId</label><label class="text-red error ml-5" for="HtmlId"></label>
+                                            <input type="text" class="form-control" name="HtmlId" value="@PageComponent.HtmlId" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="LinkStyles">LinkStyles</label><label class="text-red error ml-5" for="LinkStyles"></label>
+                                            <input class="custom-tag" name="LinkStyles" value="@(String.Join(",", PageComponent.LinkStyles))" id="LinkPageStyles">
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="LinkScripts">LinkScripts</label><label class="text-red error ml-5" for="LinkScripts"></label>
+                                            <input class="custom-tag" name="LinkScripts" value="@(String.Join(",", PageComponent.LinkScripts))" id="LinkPaegScripts">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn-upload-media btn btn-primary">Thay đổi</button>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <label>Ảnh mẫu</label>
+                                @if (PageComponent.ViewImage.IsTrueOrFalse())
+                                {
+                                    <div class="parttemImgPageComponentItemPlace border p-2">
+                                        <img src="@APIMediaConfig.APIMediaShowContentDefault@PageComponent.ViewImage" class="img-width-fit" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pageComponentItems" class="tab-pane">
+                        <div class="tablePageComponentItems">
+                            <div class="dataTables_wrapper dt-bootstrap4 no-footer table-PageComponentItems">
+                                <div class="row p-0 headerTable">
+                                    <div class="row col-6 h-100">
+                                        <div class="d-flex col-12">
+                                            <div class="col-sm-12 col-lg-2 p-0">
+                                                <div class="">
+                                                    <div class="dataTables_length">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4">
+                                                <label>Lọc theo Type:</label>
+                                                <select class="form-control filterType kt-select2-filterType cursor-pointer hightLight">
+                                                    <option value="null" selected>Tất cả</option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Experience_1)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Experience_1)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_6)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_6)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Left)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Left)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Btn_Link)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Btn_Link)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_8)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_8)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Left)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Left)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_3)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_3)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Left)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Left)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_3)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_3)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_3)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_3)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Right)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Right)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Right)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Right)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Right)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Right)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Slide_1)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Slide_1)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_4)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_4)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_4)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_4)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_3)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_3)
+                                                    </option>
+                                                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Page)">
+                                                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Page)
+                                                    </option>
+                                                    @*<option value="@((int)EnumCommonCode.EnumPageComponentItemType.BlogDetail_Tag_Sidebar)">
+                                                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.BlogDetail_Tag_Sidebar)
+                                                        </option>*@
+                                                </select>
+                                            </div>
+                                            <div class="col-4"></div>
+                                            <div class="col-12 col-lg-2 d-flex align-items-end justify-content-between mb-2 px-0">
+                                                <div data-toggle="tooltip" class="mb-3 cursor-help"
+                                                     title="Thay đổi Idx bằng cách nhấn vào hình cái bút trong cột 'Sửa'. Nếu muốn thay đổi Idx bằng cách
+                                                     kéo thả thì cần phải chọn 'Lọc theo Type' trước!">
+                                                    (?)
+                                                </div>
+                                                <button class="updateIdx btn btn-success disabled cursor-not-allowed">Cập nhật lại idx</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered" id="html_table_PageComponentItems">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sortable" data-field="Idx">Idx</th>
+                                                        <th data-field="Type">Type</th>
+                                                        <th data-field="ProductName">Tên</th>
+                                                        <th data-field="Title">Title</th>
+                                                        <th data-field="Image">Ảnh</th>
+                                                        <th data-field="Link">Link</th>
+                                                        @*<th class="sortable" data-field="CreatedDate">Ngày tạo</th>
+                                                            <th class="sortable" data-field="createdByName">Người tạo</th>
+                                                            <th class="sortable cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                                            <th class="sortable cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>*@
+                                                        <th data-priority="1" title="Chi tiết">Sửa</th>
+                                                        <th data-priority="1" title="Chi tiết">Xóa</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row col-sm-12">
+                                            <div class="col-md-5">
+                                                <div class="dataTables_info">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="dataTables_paginate paging_simple_numbers">
+                                                    <ul class="pagination">
+                                                        <li class="paginate_button page-item previous disabled">
+                                                            <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                                                <i class="la la-angle-left"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="paginate_button page-item active">
+                                                            <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item next disabled">
+                                                            <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                                                <i class="la la-angle-right"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (@PageComponent.ViewImage.IsTrueOrFalse())
+                                    {
+                                        <div class="col-6">
+                                            <label>Mẫu ảnh</label>
+                                            <div class="parttemImgPlace p-3 border">
+                                                <img src="@APIMediaConfig.APIMediaShowContentDefault@PageComponent.ViewImage" class="parttenImg img-width-fit" />
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End: Tab panes -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="selectTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Chọn loại Page component item
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label data-toggle="tooltip"
+                           title="Chọn những loại mà có đóng khung màu xanh ở mẫu ảnh">
+                        Chọn kiểu (?)
+                    </label>
+                    <select class="kt-select2-TypePageComponentItem form-control cursor-pointer">
+                        <option value="null">Chưa chọn</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Experience_1)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Experience_1)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_6)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_6)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Left)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Left)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Btn_Link)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Btn_Link)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_8)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_8)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Left)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Left)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_3)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_3)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Left)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Left)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_3)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_3)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Big)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Big)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Right)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Right)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Right)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Right)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Right)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Right)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Slide_1)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Slide_1)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_4)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_4)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_4)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_4)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_3)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_3)
+                        </option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Page)">
+                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Page)
+                        </option>
+                        @*<option value="@((int)EnumCommonCode.EnumPageComponentItemType.BlogDetail_Tag_Sidebar)">
+                                @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.BlogDetail_Tag_Sidebar)
+                            </option>*@
+                    </select>
+
+                    @if (@PageComponent.ViewImage.IsTrueOrFalse())
+                    {
+                        <div class="mt-4">
+                            <label>Ảnh mẫu</label>
+                            <div class="p-3 border">
+                                <img src="@APIMediaConfig.APIMediaShowContentDefault@PageComponent.ViewImage" class="img-width-fit" />
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="continueAddPageComponentItems btn btn-primary">Tiếp tục</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end:: Content -->
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts {
+    <script src="~/Content/plugins/jquery-ui/jquery-ui.bundle.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageComponentDetail.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageComponentItems.js?v=@SystemVersion.VersionJS"></script>
+
+
+    <script>
+        var hardExpandVar = {
+            PageComponentId: `@PageComponent.Id`
+        }
+
+        $(document).ready(function () {
+            pageComponentDetail.init();
+        })
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@using DigiticketCMS.Models.Users;
+@model UsersEditToViewModel
+
+@using (Html.BeginForm("UsersEdit", "Users", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    showLoading = true,
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        <h1 class="modal-title">Update user <span class="text-success">@Model.Name</span></h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div id="UsersUpdateModalTree">
+            <ul>
+                @foreach (var item in Model.Data)
+                {
+                    <li data-jstree='{"opened": true,"selected": @(item.IsSelected ? "true" : "false")}' id="@item.Id">
+                        <span>@item.Name</span>
+                    </li>
+                }
+            </ul>
+        </div>
+        <input type="hidden" name="UserId" value="@Model.Id" />
+        <input type="hidden" name="RoleIds" id="tree-values" value="@(String.Join("~", Model.Data.Where(u => u.IsSelected == true).Select(u => u.Id)))" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

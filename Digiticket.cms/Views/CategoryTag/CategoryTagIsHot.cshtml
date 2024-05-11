@@ -1,0 +1,164 @@
+﻿@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using DigiticketCMS.Models.CategoryTag;
+@model CategoryTagToGetByPageViewModel
+
+@{
+    ViewBag.Title = "DS chuyên mục blog is hot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool IsReadOnly = Model.ParentId == 0;
+}
+
+
+@section customStyles {
+    <link href="~/Content/css/categoryTag/categoryTag.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+
+<input name="round" id="round" type="hidden" value="@Model.Round" />
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+
+    <div class="kt-container kt-container--fluid kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Danh sách chuyên mục blog is hot
+                        @if (!string.IsNullOrEmpty(Model.ParentName))
+                        {
+                            <span>Con của <span class="text-success">@Model.ParentName</span></span>
+                        }
+                    </h3>
+                </div>
+                @if (User.CheckPermission(Permission.TagsAdd))
+                {
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+                            <div class="kt-portlet__head-actions">
+                                <div class=" text-right">
+                                    @if (Model.Round <= 3)
+                                    {
+                                        <a href="@Url.Action("CategoryTagIsHotAddOrUpdateModal", "CategoryTag")" class="onValidateAdd btn btn-primary btn-elevate btn-icon-sm"
+                                           data-modal="" data-modal-size="modal-lg" data-callback="categoryTag.onRendAfterModalIsShown('IsHot');">
+                                            <i class="la la-plus"></i>
+                                            Thêm mới chuyên mục blog is hot
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @* content table *@
+            <div class="kt-portlet__body">
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer table-categoryTags">
+                    <div class="row headerTable pl-3">
+                        <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                            <div class="col-12 col-sm-5">
+                                <div class="dataTables_length">
+
+                                </div>
+                            </div>
+                        </div>
+                        @FilterHelper.ClearFilter()
+                        @FilterHelper.FindName("col-12 col-md-3")
+                        @*<div class="col-sm-6"></div>
+                            <div class="convertPage col-sm-12 col-md-1">
+                                <div class="text-right"><label class="mr-2">Home</label></div>
+                                <div class="text-right">
+                                    <a href="@Url.Action("CategoryTag", "CategoryTag", new { parentId = "0"})" class="btnConvertPage btn btn-info">
+                                        <i class="fa fa-home p-0"></i>
+                                    </a>
+                                </div>
+                            </div>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="html_table_categoryTags">
+                                <thead class="">
+                                    <tr>
+                                        <th class="sortable" data-field="Name">Tên chuyên mục</th>
+                                        <th data-field="parentName">Chuyên mục cha</th>
+                                        <th data-field="TextView">TextView</th>
+                                        <th data-field="TextLink">TextLink</th>
+                                        <th data-field="IsView">IsView</th>
+                                        <th data-field="IsHome">IsHome</th>
+                                        <th data-field="IsHot">IsHot</th>
+                                        <th class="sortable" data-field="Idx">Idx</th>
+                                        <th class="cursor-help" data-toggle="tooltip" title="Thêm chuyên mục con">Thêm CMC</th>
+                                        <th class="cursor-help" data-toggle="tooltip"
+                                            title="Xem chuyên mục con. Lưu ý: Bạn sẽ được chuyển sang trang 'Thiết lập chuyên mục Blog'. Ở
+                                            đây bạn chỉ có thể xem chứ không thể thêm 'chuyên mục blog is home.'">Xem CMC</th>
+                                        @*<th>Sửa</th>*@
+                                        @*<th class="sortable" data-field="CreatedDate">Ngày tạo</th>
+                                            <th class="sortable" data-field="createdByName">Người tạo</th>
+                                            <th class="sortable cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                            <th class="sortable cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>*@
+                                        @*<th title="Chi tiết">Sửa</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="dataTables_info">
+
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* end: content table *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts{
+    <script>
+        var permission = {
+            add: '@User.CheckPermission(Permission.TagsAdd)' === 'True' ? true : false,
+            edit: '@User.CheckPermission(Permission.TagsEdit)' === 'True' ? true : false
+        }
+
+        parentId = @(Model.ParentId == 0 ? "undefined" : $"`{Model.ParentId}`");
+        var parentName = `@Model.ParentName`;
+        var isHot = true;
+        var isHome = false;
+    </script>
+
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/select2/js/select2.full.min.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/common-pages/categoryTag/categoryTag.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/categoryTag/categoryTagIsHot.js?v=@SystemVersion.VersionJS"></script>
+
+}

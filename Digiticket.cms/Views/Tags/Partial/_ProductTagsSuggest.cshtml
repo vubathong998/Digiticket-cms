@@ -1,0 +1,28 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.Tags;
+@model List<ProductTagsResponse>
+
+<ul class="list-suggest-tags mt-2" style="padding-inline-start:1rem">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <li class="pointer mt-2 template"
+                data-id="@item.Id"
+                data-parentId="@item.ParentId"
+                data-categoryId="@item.CategoryId"
+                data-destinationId="@item.DestinationId"
+                data-textView="@item.TextView"
+                data-textLink="@item.TextLink"
+                data-name="@item.Name"
+                data-type="@item.Type"
+                data-idx="@item.Idx">
+                @item.Name @(item.ParentName != null && item.ParentName != "" ? $"(parent: {item.ParentName} )" : "")
+            </li>
+        }
+    }
+    else
+    {
+        <li class="mt-2">Không có kết quả</li>
+    }
+</ul>

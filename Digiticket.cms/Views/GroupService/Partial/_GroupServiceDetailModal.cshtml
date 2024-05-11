@@ -1,0 +1,439 @@
+﻿@using Infrastructure.Config;
+@using Infrastructure.Extensions;
+@using Services.Models.Responses.Tags;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Models.GroupService
+@model GroupServiceResponseViewModel
+
+@{
+    var GroupService = Model.GroupServiceResponse;
+}
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid position-relative">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span class="kt-portlet__head-icon">
+                <i class="kt-font-brand flaticon2-line-chart"></i>
+            </span>
+            Thông tin gói dịch vụ <span class="text-success">@GroupService.Name</span>
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body contentUpdaTenant">
+        <ul class="nav nav-tabs mb-2" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link show active" data-toggle="tab" href="#groupService__baseInfo">Thông tin cơ bản</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#groupService__image">Ảnh</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#groupService__numberTicket">Số lượng vé</a>
+            </li>
+            @*<li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#groupService__groupTime">Gói thời gian</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#groupService__groupNumber">Gói Số lượng</a>
+                </li>*@
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#groupService__tags">Tags</a>
+            </li>
+            @*<li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#groupService__tagsProcess">TagsProcess</a>
+                </li>*@
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#groupService__tagsView">TagsView</a>
+            </li>
+        </ul>
+
+        <!-- start contetn -->
+        <div class="supplierContent tab-content">
+            <div id="groupService__baseInfo" class="tab-pane show active">
+                @using (Html.BeginForm("GroupServiceTagsUpdateInfo", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateBaseInfo",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="BaseInfo mx-0 border row">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        @*<div class="col-12 col-md-6">
+                                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                                <input type="text" class="form-control" name="name" value="@GroupService.Name" />
+                            </div>*@
+                        <div class="col-12 col-md-6 mt-2">
+                            <label for="description">Mô tả</label><label class="text-red error ml-5" for="description"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="description" id="groupServiceDescription">@GroupService.Description</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-2">
+                            <label for="excluding">Không bao gồm</label><label class="text-red error ml-5" for="excluding"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="excluding" id="groupServiceExcluding">@GroupService.Excluding</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-4">
+                            <label for="including">Bao gồm</label><label class="text-red error ml-5" for="including"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="including" id="groupServiceIncluding">@GroupService.Including</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-4">
+                            <label for="condition">Điều kiện</label><label class="text-red error ml-5" for="condition"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="condition" id="groupServiceDetailInfor">@GroupService.Condition</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-4">
+                            <label for="schedule">Lịch trình</label><label class="text-red error ml-5" for="schedule"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="schedule" id="groupServiceSchedule">@GroupService.Schedule</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-4">
+                            <label for="infor">Thông tin thêm</label><label class="text-red error ml-5" for="infor"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="infor" id="groupServiceInfor">@GroupService.Infor</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 mt-4">
+                            <label for="note">Note</label><label class="text-red error ml-5" for="note"></label>
+                            <div class="CKEditor__groupService">
+                                <textarea class="text-html form-control w-100" name="note" id="groupServiceNote">@GroupService.Note</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    if (User.CheckPermission(Permission.ProductEditGroupService))
+                    {
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div id="groupService__image" class="tab-pane">
+                @using (Html.BeginForm("GroupServiceUpdateImage", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateImage",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="image p-3 border">
+                        <input name="id" value="@GroupService.Id" type="hidden" />
+                        <div class="">
+                            <div class="text-red">
+                            </div>
+                            <div class="imgGroupService-container">
+                                <label>Tên ảnh</label>
+                                <div class="tags-element">
+                                    <select class="form-control select-tags-img--groupService"
+                                            data-name="selectPicture"
+                                            data-key="images"
+                                            multiple="multiple">
+                                        @if (!GroupService.Images.IsNullOrEmpty())
+                                        {
+                                            foreach (var image in GroupService.Images)
+                                            {
+                                                <option value="@Json.Encode(image)" selected>@image.Url </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line-light mt-3"></div>
+                        <div class="list-img-preview mt-1">
+
+                        </div>
+                    </div>
+                    if (User.CheckPermission(Permission.ProductEditGroupService))
+                    {
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div id="groupService__numberTicket" class="tab-pane">
+                @using (Html.BeginForm("GroupServiceUpdateNumberTicket", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "updateNumberTicket",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="BaseInfo p-3 border">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        <div class="row">
+                            <div class="col-12 col-md-3 col-sm-6">
+                                <label for="minTickets">MinTickets</label><label class="text-red error ml-5" for="minTickets"></label>
+                                <input type="text" class="form-control" name="minTickets" value="@GroupService.MinTickets" />
+                            </div>
+                            <div class="col-12 col-md-3 col-sm-6">
+                                <label for="maxTickets">MaxTickets</label><label class="text-red error ml-5" for="maxTickets"></label>
+                                <input type="text" class="form-control" name="maxTickets" value="@GroupService.MaxTickets" />
+                            </div>
+                        </div>
+                    </div>
+                    if (User.CheckPermission(Permission.ProductEditGroupService))
+                    {
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div id="groupService__groupTime" class="tab-pane">
+                @using (Html.BeginForm("", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateTime",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="BaseInfo m-2 p-3 border">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        <div class="d-flex align-items-between">
+                            <h3>Các gói thời gian</h3>
+                        </div>
+                        @*@if (!GroupService.groupTime)
+                            {
+                                int i = 0;
+                                foreach (var item in GroupService.groupTime)
+                                {
+                                    <div class="border m-2 p-3">
+                                        <div class="row">
+                                            <div class="col-sm-4 col-md-3 col-12">
+                                                <label for="timeType">timeType</label><label class="text-red error ml-5" for="timeType"></label>
+                                                <select name="groupTime.timeType[@i]">
+                                                    @for (int j = 0; j < 5; j++)
+                                                    {
+                                                        <option value="@j" @(item.timeType == @j)>@StatusMange.Status[@j]</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4 col-md-3 col-12">
+                                                <label for="periodTime">beginDate</label><label class="text-red error ml-5" for="beginDate"></label>
+                                                <input type="text" class="form-control" name="groupTime.beginDate[@i]" value="@(item.beginDate != null ? item.beginDate.ToString("mm/dd/yyyy") : "")" />
+                                            </div>
+                                            <div class="col-sm-4 col-md-3 col-12">
+                                                <label for="endDate">endDate</label><label class="text-red error ml-5" for="endDate"></label>
+                                                <input type="text" class="form-control" name="groupTime.endDate[@i]" value="@(item.endDate != null ? item.endDate.ToString("mm/dd/yyyy") : "")" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-3 col-12">
+                                                <label for="dateUnit">dateUnit</label><label class="text-red error ml-5" for="dateUnit"></label>
+                                                <input type="text" class="form-control" name="groupTime.dateUnit[@i]" value="@item.dateUnit" />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-12">
+                                                <label for="periodTime">periodTime</label><label class="text-red error ml-5" for="periodTime"></label>
+                                                <input type="text" class="form-control" name="groupTime.periodTime[@i]" value="@item.periodTime" />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-12">
+                                                <label for="periodMark">periodMark</label><label class="text-red error ml-5" for="periodMark"></label>
+                                                <input type="text" class="form-control" name="groupTime.periodMark[@i]" value="@item.periodMark" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @(i++)
+                                }
+                            }*@
+                        @if (User.CheckPermission(Permission.ProductEditGroupService))
+                        {
+                            <div class="mt-3">
+                                <button class="addGroupTime btn btn-info">Thêm gói thời gian</button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div id="groupService__groupNumber" class="tab-pane">
+                @using (Html.BeginForm("", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateNumber",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="BaseInfo m-2 p-3 border">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        <div class="d-flex">
+                            <h3>Các gói số lượng</h3>
+                            @*@if (!GroupService.groupNumbers.IsNullOrEmpty())
+                                {
+                                    int i = 0;
+                                    foreach (var item in GroupService.groupNumbers)
+                                    {
+                                        <div class="border m-2 p-3">
+                                            <div class="row">
+                                                <div class="col-sm-4 col-md-3 col-12">
+                                                    <label for="timeType">timeType</label><label class="text-red error ml-5" for="timeType"></label>
+                                                    <select name="groupNumbers.timeType[@i]">
+                                                        @for (int j = 0; j < 5; j++)
+                                                        {
+                                                            <option value="@j" @(item.type == @j)>@StatusMange.Status[@j]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-4 col-md-3 col-12">
+                                                    <label for="periodTime">beginDate</label><label class="text-red error ml-5" for="beginDate"></label>
+                                                    <input type="text" class="form-control" name="groupTime.beginDate[@i]" value="@item.data" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @(i++)
+                                    }
+                                }*@
+                        </div>
+                        <div class="mt-3"><button class="addGroupNumber btn btn-info">Thêm gói Số lượng</button></div>
+                    </div>
+                }
+            </div>
+
+            <div id="groupService__tags" class="tab-pane">
+                @Html.Partial("Partial/_TagsType2")
+            </div>
+
+            <div id="groupService__tagsProcess" class="tab-pane">
+                @using (Html.BeginForm("groupServiceUpdateTagsProcess", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateTagsProcess",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    var TagsProcess = new ProductTagsResponse();
+                    <div class="BaseInfo py-3 border">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        <div class="col-12 ml-1" id="select-tagsProcess">
+                            <div class="tagsProcess-container">
+                                <label for="tagsProcess">TagsProcess</label><label class="text-red error ml-5" for="tags"></label>
+                                <div class="">
+                                    <div class="tags-element">
+                                        @if (!GroupService.TagsProcess.IsNullOrEmpty())
+                                        {
+                                            TagsProcess = GroupService.TagsProcess[0];
+                                            <select class="select-productTagsProcess form-control"
+                                                    data-key="tagsProcess" data-type="@((int)EnumCommonCode.ETagsItemType.GroupServiceProcess)"
+                                                    name="selectHot" id="selectHot">
+                                                <option selected>@GroupService.TagsProcess[0].Name</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="select-productTagsProcess form-control"
+                                                    data-key="tagsProcess"
+                                                    data-type="@((int)EnumCommonCode.ETagsItemType.GroupServiceProcess)"
+                                                    name="selectHot"
+                                                    id="selectHot">
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                                @if (TagsProcess.Id != 0)
+                                {
+                                    <input type="hidden" name="tagsProcess[0].id" id="TagsProcess" value="@TagsProcess.Id " />
+                                    <input type="hidden" name="tagsProcess[0].parentId" id="parentId" value="@TagsProcess.ParentId" />
+                                    <input type="hidden" name="tagsProcess[0].categoryId" id="categoryId" value="@TagsProcess.CategoryId" />
+                                    <input type="hidden" name="tagsProcess[0].destinationId" id="destinationId" value="@TagsProcess.DestinationId" />
+                                    <input type="hidden" name="tagsProcess[0].textView" id="textView" value="@TagsProcess.TextView" />
+                                    <input type="hidden" name="tagsProcess[0].textLink" id="textLink" value="@TagsProcess.TextLink" />
+                                    <input type="hidden" name="tagsProcess[0].name" id="name" value="@TagsProcess.Name" />
+                                    <input type="hidden" name="tagsProcess[0].type" id="type" value="@TagsProcess.Type" />
+                                    <input type="hidden" name="tagsProcess[0].idx" id="idx" value="@TagsProcess.Idx" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    if (User.CheckPermission(Permission.ProductEditGroupService))
+                    {
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div id="groupService__tagsView" class="tab-pane">
+                @using (Html.BeginForm("GroupServiceUpdateTagsView", "GroupService", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form",
+                    @id = "groupServiceUpdateTagsView",
+                    spellcheck = false,
+                    showLoading = true
+                }))
+                {
+                    <div class="BaseInfo py-3 border">
+                        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+                        <div class="col-12 ml-1" id="select-tagsView">
+                            <label for="tagsView">Tags View</label><label class="text-red error ml-5" for="tagsView"></label>
+                            <div class="tagsView-container--groupService">
+                                <div class="tags-element">
+                                    <select class="form-control select-tagsView"
+                                            data-type="@((int)EnumCommonCode.ETagsItemType.GroupServiceView)"
+                                            data-key="tagsView" multiple="multiple">
+                                        @if (!GroupService.Tags.IsNullOrEmpty())
+                                        {
+                                            foreach (var TagView in GroupService.TagsView)
+                                            {
+                                                <option value="@Json.Encode(TagView)" selected>@TagView.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                @if (!GroupService.Tags.IsNullOrEmpty())
+                                {
+                                    for (int i = 0; i < GroupService.TagsView.Count; i++)
+                                    {
+                                        var TagView = GroupService.TagsView[i];
+                                        <input type="text" class="d-none" name="tagsView[@i].Id" value="@TagView.Id">
+                                        <input type="text" class="d-none" name="tagsView[@i].ParentId" value="@TagView.ParentId">
+                                        <input type="text" class="d-none" name="tagsView[@i].CategoryId" value="@TagView.CategoryId">
+                                        <input type="text" class="d-none" name="tagsView[@i].CategoryId" value="@TagView.DestinationId">
+                                        <input type="text" class="d-none" name="tagsView[@i].TextView" value="@TagView.TextView">
+                                        <input type="text" class="d-none" name="tagsView[@i].TextLink" value="@TagView.TextLink">
+                                        <input type="text" class="d-none" name="tagsView[@i].Name" value="@TagView.Name">
+                                        <input type="text" class="d-none" name="tagsView[@i].Type" value="@TagView.Type">
+                                        <input type="text" class="d-none" name="tagsView[@i].Idx" value="@TagView.Idx">
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    if (User.CheckPermission(Permission.ProductEditGroupService))
+                    {
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

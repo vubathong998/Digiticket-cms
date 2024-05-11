@@ -1,0 +1,922 @@
+﻿@using Infrastructure.Extensions;
+@using Infrastructure.Config;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Models.Product;
+@using Newtonsoft.Json;
+@using DigiticketCMS.Helpers;
+
+@model ProductDetailViewModel
+
+@{
+    var Product = Model.ProductResponse;
+
+    bool isReadOnly = string.IsNullOrEmpty(Product.Url) || string.IsNullOrEmpty(Product.Code);
+    ViewBag.Title = "Thông tin sản phẩm " + Product.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section customStyles{
+    <link href="~/Content/css/product/product.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/css/genaral/GlobalPicture.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/plugins/jquery-ui/jquery-ui.bundle.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+<div class="modal fade" id="CompareServicePriceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="kt-container kt-container--fluid kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon2-line-chart"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Thông tin Product <span class="text-success">@Product.Name</span>
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                @if (User.CheckPermission(Permission.ProductUpdateQueryPrice))
+                {
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="kt-portlet__head-actions">
+                            <div class="text-right">
+                                <button type="button" class="updateQueryPrice btn btn-success">
+                                    <i class="text-light la la-retweet"></i>
+                                    Cập nhật giá hiển thị
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="ml-3 kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        <div class="text-right">
+                            <a href="@SystemConfig.System_FEDomain/vi/@Product.Url" class="btn btn-primary" target="_blank">
+                                <i class="text-light flaticon-eye"></i>
+                                Xem trước
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contentUpdaTenant m-3">
+            @if (!isReadOnly)
+            {
+                <ul class="nav nav-tabs mb-0" role="tablist">
+                    @if (User.CheckPermission(Permission.ProductViewInfo))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link show active" data-toggle="tab" href="#baseInfo">Thông tin cơ bản</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewImage))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#image">Ảnh</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewSEO))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#seo">SEO</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewTags))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tags">Tags</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewTagsGroup))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tagsGroup">Tags group</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewConfig))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#congifOrder">Cấu hình</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewStatus))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#status">Trạng thái</a>
+                        </li>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewService))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#services" id="href__services">Dịch vụ</a>
+                        </li>
+                    }
+                </ul>
+                <!-- Tab panes -->
+                <div class="supplierContent tab-content">
+                    @if (User.CheckPermission(Permission.ProductViewInfo))
+                    {
+                        <div id="baseInfo" class="tab-pane show active">
+                            @using (Html.BeginForm("ProductUpdateBaseInfo", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateBaseInfo",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="BaseInfo my-2 mx-0 p-3 border row">
+                                    <input type="hidden" value="@Product.Id" name="Id" readonly />
+                                    <div class="col-12 col-lg-6">
+                                        <div class="">
+                                            <label for="name">Danh mục <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                            <input type="text" class="noClick form-control" readonly value="@Product.CategoryName" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="name">Điểm đến <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                            <input type="text" class="noClick form-control" readonly value="@Product.DestinationName" />
+                                        </div>
+                                        @*<div class="">
+                                                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                                                <input type="text" class="form-control" name="name" value="@Product.Name" placeholder="Nhập tên" />
+                                            </div>*@
+                                        <div class="place-container mt-4">
+                                            <label for="placeId">Địa điểm</label><label class="text-red error ml-5" for="placeId"></label>
+                                            @if (Product.PlaceId.IsTrueOrFalse())
+                                            {
+                                                <select class="form-control select-productPlace" name="selectPlace" id="selectPlace">
+                                                    <option value="@Product.PlaceId" selected>@Product.Place</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control select-productPlace" name="selectPlace" id="selectPlace"></select>
+                                            }
+                                            <input type="hidden" class="place d-none" name="place" value="@Product.Place" />
+                                            <input type="hidden" class="place d-none" name="placeId" value="@Product.PlaceId" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="description">Mô tả</label><label class="text-red error ml-5" for="description"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="description" id="description">@Product.Description</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        @*<div class="">
+                                                <label for="schedule">Lịch trình</label><label class="text-red error ml-5" for="schedule"></label>
+                                                <div class="CKEditor">
+                                                    <textarea class="text-html form-control w-100" name="schedule" id="schedule">@Product.schedule</textarea>
+                                                </div>
+                                            </div>*@
+                                        <div class="">
+                                            <label for="detailInfor">Thông tin chi tiết</label><label class="text-red error ml-5" for="detailInfor"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="detailInfor" id="detailInfor">@Product.DetailInfor</textarea>
+                                            </div>
+                                        </div>
+                                        @*<div class="row mt-4">
+                                                <div class="">
+                                                    <label for="including">Bao gồm</label><label class="text-red error ml-5" for="including"></label>
+                                                    <div class="CKEditor">
+                                                        <textarea class="text-html form-control w-100" name="including" id="including">@Product.including</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        @*<div class="row mt-4">
+                                                <div class="">
+                                                    <label for="excluding">Không bao gồm</label><label class="text-red error ml-5" for="excluding"></label>
+                                                    <div class="CKEditor">
+                                                        <textarea class="text-html form-control w-100" name="excluding" id="excluding">@Product.excluding</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    <label for="condition">Điều kiện</label><label class="text-red error ml-5" for="condition"></label>
+                                                    <div class="CKEditor">
+                                                        <textarea class="text-html form-control w-100" name="condition" id="condition">@Product.condition</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        @*<div class="">
+                                                <label for="extraInfo">Thông tin thêm</label><label class="text-red error ml-5" for="extraInfo"></label>
+                                                <div class="CKEditor">
+                                                    <textarea class="text-html form-control w-100" name="extraInfo" id="extraInfo">@Product.extraInfo</textarea>
+                                                </div>
+                                            </div>*@
+                                        <div class="mt-4">
+                                            <label for="note">Ghi chú</label><label class="text-red error ml-5" for="note"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="note" id="note">@Product.Note</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditInfo))
+                                {
+                                    <div class="mt-3">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewImage))
+                    {
+                        <div id="image" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateImage", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateImgInfo",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="imageContainer">
+                                    <input type="hidden" value="@Product.Id" name="id" readonly />
+                                    <div class="row my-3">
+                                        <div class="select_img col-12 col-md-4">
+                                            <label>Ảnh đại diện (Bắt buộc)*</label><label class="text-red error ml-5" for="lookImg"></label>
+                                            <div>
+                                                @if (Product.Avatar.IsTrueOrFalse())
+                                                {
+                                                    <select class="form-control select-productAvatar" name="selectAvatar" id="selectAvatar">
+                                                        <option value="@Product.Avatar" selected>@Product.Avatar</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select class="form-control select-productAvatar" name="selectAvatar" id="selectAvatar"></select>
+                                                }
+                                                <input type="hidden" class="productAvatar" name="avatar" value="@Product.Avatar" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-2 ListResize border-right d-flex align-items-center justify-content-center">
+                                            <div class="img">
+                                                @{
+                                                    var linkAvatar = @APIMediaConfig.APIMediaShowContentDefault + @Product.Avatar;
+                                                }
+                                                <div class="showProductAvatar d-flex align-items-center">
+                                                    <b><a href="@linkAvatar" title="" target="_blank">Xem trước</a></b>
+                                                </div>
+                                                <input type="hidden" class="nameLockingImg" name="lookImg" value="@Product.Avatar" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label>Nhập vào url avatar video</label>
+                                            <input placeholder="Nhập url video" name="avatarVideo" value="@Product.AvatarVideo" class="inputVideo form-control" />
+                                        </div>
+                                        <div class="col-12 col-md-2 d-flex align-items-center justify-content-center">
+                                            <div class="video">
+                                                <b><a href="@Product.AvatarVideo" class="previewAvatarVideo @(Product.AvatarVideo.IsTrueOrFalse() ? "" : "d-none")" target="_blank">Xem trước</a></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line-light"></div>
+                                    <div class="mt-1">
+                                        <div class="">
+                                            <label>Ảnh sản phẩm</label>
+                                            <div class="img-container">
+                                                <div class="tags-element">
+                                                    <select class="form-control select-tags-img" data-key="images" multiple="multiple">
+                                                        @if (Product != null)
+                                                        {
+                                                            if (!Product.Images.IsNullOrEmpty())
+                                                            {
+                                                                foreach (var image in Product.Images)
+                                                                {
+                                                                    if (image.Type != 2)
+                                                                    {
+                                                                        <option value="@Json.Encode(image)" selected>@image.Url </option>
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="list-img-preview mt-1">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line-light mt-3"></div>
+                                    <div class="mt-1">
+                                        <div>
+                                            <label>Video sản phẩm</label>
+                                            <input class="videoProduct custom-tag" value="@String.Join(", ", Product.Images.Where(i => i.Type == 2).Select(i => i.Type == 2 ? i.Url : ""))" placeholder="Nhập để tìm kiếm video sản phẩm" />
+                                        </div>
+                                        <div class="list-video-preview mt-1 border">
+                                            <div class="tableVideoProduct">
+                                                <div class="row mx-0 align-items-center headerList py-2">
+                                                    <div class="col-3 font-weight-bold text-center">Tên mô tả</div>
+                                                    <div class="col-3 font-weight-bold text-center">Link</div>
+                                                    <div class="col-3 font-weight-bold text-center">Thẻ alt</div>
+                                                    <div class="col-1 font-weight-bold text-center">Idx</div>
+                                                    <div class="col-1 font-weight-bold text-center">Xem</div>
+                                                    <div class="col-1 font-weight-bold text-center">Clear</div>
+                                                </div>
+                                                <div class="videoListItemContainer p-1">
+                                                    @if (!Product.Images.IsNullOrEmpty())
+                                                    {
+                                                        int i = 0;
+                                                        foreach (var item in Product.Images)
+                                                        {
+                                                            if (item.Type == 2)
+                                                            {
+                                                                <div class="videoListItem row mt-2">
+                                                                    <div class="col-3">
+                                                                        <input class="name form-control" name="videos[@i].name" value="@item.Name" />
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input class="link form-control" name="videos[@i].link" value="@item.Link" />
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input class="alt form-control" name="videos[@i].alt" value="@item.Alt" />
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <input type="number" min="0" class="idx form-control" name="videos[@i].idx" value="@item.Idx" />
+                                                                        <input type="hidden" class="type" name="videos[@i].type" value="2" />
+                                                                        <input type="hidden" class="url" name="videos[@i].url" value="@item.Url" />
+                                                                    </div>
+                                                                    <div class="col-1 text-center">
+                                                                        <a href="@item.Url" class="" target="_blank" data-toggle="tooltip" data-placement="top" data-original-title="@item.Url">Xem</a>
+                                                                    </div>
+                                                                    <div class="col-1 text-center">
+                                                                        <button type="button" class="clearListVideo bg-transparent border-0" data-url="@item.Url" data-toggle="tooltip" data-placement="top" data-original-title="@item.Url">
+                                                                            <i class="flaticon2-cancel-music"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                i++;
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" readOnly name="total__imagesArePicked" class="total__imagesArePicked" />
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditImage))
+                                {
+                                    <div class="mt-3">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                        <label class="text-red error ml-5" for="total__imagesArePicked"></label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewSEO))
+                    {
+                        <div id="seo" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateSeoInfo", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateSeoInfo",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="seo my-2 p-3 border">
+                                    <input type="hidden" value="@Product.Id" name="id" readonly />
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <label for="name">Url <span class="text-warning">(Không được phép cập nhật)</span></label><label class="text-red error ml-5" for="name"></label>
+                                            <input type="text" class="noClick form-control" readonly value="@Product.Url" />
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label for="metaTitles">MetaTitles</label><label class="text-red error ml-5" for="metaTitles"></label>
+                                            <input type="text" class="form-control" name="metaTitles" value="@(Product.metaTags != null ? Product.metaTags.Titles : "")" placeholder="Nhập meta tiêu đề" />
+                                        </div>
+                                        <div class="col-12 col-md-6 mt-4">
+                                            <label for="metaDescription">MetaDescription</label><label class="text-red error ml-5" for="metaDescription"></label>
+                                            <input type="text" class="form-control" name="metaDescription" value="@(Product.metaTags != null ? Product.metaTags.Description : "")" placeholder="Nhập mô tả meta" />
+                                        </div>
+                                        <div class="col-12 col-md-6 mt-4">
+                                            <label for="metaImage">MetaImage</label><label class="text-red error ml-5" for="metaImage"></label>
+                                            <input type="text" class="form-control" name="metaImage" value="@(Product.metaTags != null ? Product.metaTags.Image : "")" placeholder="Ảnh meta" />
+                                        </div>
+                                        <div class="col-12 mt-4">
+                                            <label for="introduction">Giới thiệu</label><label class="text-red error ml-5" for="introduction"></label>
+                                            <div class="CKEditor">
+                                                <textarea class="text-html form-control w-100" name="introduction" id="introduction">@Product.IntrOduction</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditSEO))
+                                {
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewTags))
+                    {
+                        <div id="tags" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateTags", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateTags",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="tags my-2 p-3 border">
+                                    <div class="p-2 margin-initial">
+                                        <div class="">
+                                            <h3></h3>
+                                            <input type="hidden" value="@Product.Id" name="id" readonly />
+                                            @{Html.RenderAction("ProductDetailTagsComponentView", "Product", Model);}
+                                        </div>
+                                    </div>
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditTags))
+                                {
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewTagsGroup))
+                    {
+                        <div id="tagsGroup" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateTagsGroup", "Product", FormMethod.Post, new
+                            {
+                                enctype = "",
+                                @class = "",
+                                @id = "updateTagsGroup",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="my-2 p-3 border">
+                                    <div class="margin-initial box-shadow-1 py-4 pl-3 row">
+                                        <div class="col-3 pl-0">
+                                            <input type="hidden" value="@Product.Id" name="id" readonly />
+                                            <select class="form-control select-productTagsGroup" data-type="@((int)EnumCommonCode.ETagsItemType.GroupService)"></select>
+                                        </div>
+                                        <button type="button" class="addParentTags btn btn-primary ml-2">Thêm</button>
+                                        <span class="font-weight-bold font-size-1r8 ml-3 cursor-help"
+                                              data-toggle="tooltip"
+                                              title="Phần Tag ở phía dưới, bên phải chỉ để xem trước giống như giao diện ngoài digiticket.">
+                                            (?)
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="tagsGroup mt-2 ui-sortable col-6">
+                                            @if (!Model.FullTagsGroup.IsNullOrEmpty())
+                                            {
+                                                var FullTags = Model.FullTagsGroup;
+                                                for (int i = 0; i < FullTags.Count; i++)
+                                                {
+                                                    var tagProduct = Product.TagsGroup[i].SubOptions;
+                                                    <div class="groupSubTag border p-4 p-3 mt-4 ui-sortable-handle"
+                                                         data-id="@FullTags[i].Id"
+                                                         data-name="@FullTags[i].Name">
+                                                        <div class="position-relative">
+                                                            <button type="button" class="closeSubTags-btn btn position-absolute right-0"><i class="flaticon2-cancel-music"></i></button>
+                                                            <h2 class="mb-3">@FullTags[i].Name</h2>
+                                                            <div class="mt-3">
+                                                                @if (FullTags[i].SubOptions.Count > 0)
+                                                                {
+                                                                    <select class="select-tagGroup form-control cursor-pointer d-inline-block w-300px" multiple="multiple">
+                                                                        @for (int j = 0; j < FullTags[i].SubOptions.Count; j++)
+                                                                        {
+                                                                            var item = FullTags[i].SubOptions[j];
+                                                                            <option value="@Json.Encode(item)" @(tagProduct.Any(t => t.Id == item.Id) ? "selected" : "")>
+                                                                                @item.Name
+                                                                            </option>
+                                                                        }
+                                                                    </select>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        @foreach (var item in tagProduct)
+                                                        {
+                                                            <input type="hidden" class="tagGroupIsSelected" data-sub-name="@item.Name" data-sub-id="@item.Id" />
+                                                        }
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="previewTag col-6 mt-2">
+                                            @if (!Model.FullTagsGroup.IsNullOrEmpty())
+                                            {
+                                                var FullTags = Model.FullTagsGroup;
+                                                for (int i = 0; i < FullTags.Count; i++)
+                                                {
+                                                    var tagProduct = Product.TagsGroup[i];
+                                                    <div class="mt-3">
+                                                        <div>
+                                                            <b class="previewNameSub">@Product.TagsGroup[i].Name</b>
+                                                        </div>
+                                                        <div class="previewGroup" data-id="@tagProduct.Id">
+                                                            @if (!tagProduct.SubOptions.IsNullOrEmpty())
+                                                            {
+                                                                bool isFirst = true;
+                                                                foreach (var item in tagProduct.SubOptions)
+                                                                {
+                                                                    <button type="button"
+                                                                            onclick="ProductDetail.onPreviewSelectTagGroup(this);"
+                                                                            class="previewComponentSub @(isFirst ? "active" : "") mr-2 d-inline-block border mt-1">
+                                                                        @item.Name
+                                                                    </button>
+                                                                    isFirst = false;
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditTagsGroup))
+                                {
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewConfig))
+                    {
+                        <div id="congifOrder" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateConfigOrder", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateConfigInfo",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                <div class="congifOrder border row mx-0 py-3 pr-3 mt-2">
+                                    <input type="hidden" value="@Product.Id" name="Id" readonly />  
+                                    <div class="col-12 col-lg-4 pr-0">
+                                        <label for="requireDate">Sản phẩm buộc phải chọn ngày:</label>
+                                        <label class="text-red error ml-5" for="requireDate"></label>
+                                        <select name="requireDate" class="form-control cursor-pointer">
+                                            <option @(Product.RequireDate ? "" : "selected" ) value="False">Không</option>
+                                            <option @(Product.RequireDate ? "selected" : "" ) value="True">Có</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-lg-4 pr-0">
+                                        <label class="cursor-help"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="thời hạn đặt hàng do sale nhập - mặc định = 1 (lấy giá trị lớn nhất so sánh với thời hạn đặt trước của NCC)"
+                                               for="minOrderDate">
+                                            Thời gian đặt hàng do sale nhập (?)
+                                        </label>
+                                        <label class="text-red error ml-5" for="minOrderDate"></label>
+                                        <input class="form-control" id="minOrderDate" name="minOrderDate" value="@Product.MinOrderDate" />
+                                        @*<select name="minOrderDate" class="form-control cursor-pointer">
+                                                <option value="0" @(Product.minOrderDate == 0 ? "selected" : "")>Chưa chọn</option>
+                                                <option value="1" @(Product.minOrderDate == 1 ? "selected" : "")>1</option>
+                                                <option value="2" @(Product.minOrderDate == 2 ? "selected" : "")>2</option>
+                                                <option value="3" @(Product.minOrderDate == 3 ? "selected" : "")>3</option>
+                                            </select>*@
+                                    </div>
+                                    @*<div class="col-12 col-lg-4 pr-0">
+                                            <label for="ticketLimit">Giới hạn tối đa</label>
+                                            <i data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="giới hạn tổng số lượng vé tối đa khách có thể mua đối với sp này, hiện tại dùng để giới hạn bán vé bóng đá"
+                                               class="fa fa-question-circle">
+                                            </i>
+                                            <label class="text-red error ml-5" for="ticketLimit"></label>
+                                            <input type="text" list="ticketLimitList" class="form-control" name="ticketLimit" value="@Product.ticketLimit" placeholder="" />
+                                            <datalist id="ticketLimitList" class="">
+                                                <option value="1">
+                                                <option value="5">
+                                                <option value="10">
+                                                <option value="50">
+                                                <option value="100">
+                                                <option value="500">
+                                            </datalist>
+                                        </div>
+                                        <div class="mt-4 col-12 col-lg-4 pr-0">
+                                            <label for="metaDescription">Loại sản phẩm ship</label><label class="text-red error ml-5" for="shipType"></label>
+                                            <select name="shipType" id="shipType" class="form-control cursor-pointer">
+                                                <option value="0" @(Product.shipType == 0 ? "selected" : "")>Không ship</option>
+                                                <option value="1" @(Product.shipType == 1 ? "selected" : "")>Ship ngay</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-4 col-12 col-lg-4 pr-0">
+                                            <label for="orderConditions">Điều kiện tối thiểu để đặt đơn</label><label class="text-red error ml-5" for="orderConditions"></label>
+                                            <select name="orderConditions" id="orderConditions" class="form-control cursor-pointer">
+                                                <option value="1" @(Product.orderConditions == 1 ? "selected" : "")>Điều kiện 1</option>
+                                                <option value="2" @(Product.orderConditions == 2 ? "selected" : "")>Điều kiện 2</option>
+                                                <option value="3" @(Product.orderConditions == 3 ? "selected" : "")>Điều kiện 3</option>
+                                                <option value="4" @(Product.orderConditions == 4 ? "selected" : "")>Điều kiện 4</option>
+                                                <option value="5" @(Product.orderConditions == 5 ? "selected" : "")>Điều kiện 5</option>
+                                            </select>
+                                        </div>*@
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditConfig))
+                                {
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewStatus))
+                    {
+                        <div id="status" class="tab-pane">
+                            @using (Html.BeginForm("ProductUpdateStatus", "Product", FormMethod.Post, new
+                            {
+                                enctype = "multipart/form-data",
+                                @class = "kt-form ajax-form",
+                                @id = "updateBaseInfo",
+                                spellcheck = false,
+                                showLoading = true
+                            }))
+                            {
+                                var NotSetYet = EnumCommonCode.ETagsStatusProduct.NotSetYet;
+                                var Available = EnumCommonCode.ETagsStatusProduct.Available;
+                                var Planning = EnumCommonCode.ETagsStatusProduct.Planning;
+                                var CurrentlyOutOfStock = EnumCommonCode.ETagsStatusProduct.CurrentlyOutOfStock;
+                                var SetOutOfStock = EnumCommonCode.ETagsStatusProduct.SetOutOfStock;
+                                var numNotSetYet = (int)EnumCommonCode.ETagsStatusProduct.NotSetYet;
+                                var numAvailable = (int)EnumCommonCode.ETagsStatusProduct.Available;
+                                var numPlanning = (int)EnumCommonCode.ETagsStatusProduct.Planning;
+                                var numCurrentlyOutOfStock = (int)EnumCommonCode.ETagsStatusProduct.CurrentlyOutOfStock;
+                                var numSetOutOfStock = (int)EnumCommonCode.ETagsStatusProduct.SetOutOfStock;
+                                <input type="hidden" value="@Product.Id" name="Id" readonly />
+                                <div class="status my-2 mx-0 border row">
+                                    <div class="col-12 col-md-2 my-3">
+                                        <label for="status">Update trạng thái</label><label class="text-red error ml-5" for="status"></label>
+                                        <select name="status" id="status" class="form-control cursor-pointer">
+                                            <option value="@numNotSetYet" @(Product.Status == numNotSetYet ? "selected" : "")>@EnumCommonCode.GetDisplayNameEnum(NotSetYet)</option>
+                                            <option value="@numAvailable" @(Product.Status == numAvailable ? "selected" : "")>@EnumCommonCode.GetDisplayNameEnum(Available)</option>
+                                            <option value="@numPlanning" @(Product.Status == numPlanning ? "selected" : "")>@EnumCommonCode.GetDisplayNameEnum(Planning)</option>
+                                            <option value="@numCurrentlyOutOfStock" @(Product.Status == numCurrentlyOutOfStock ? "selected" : "")>@EnumCommonCode.GetDisplayNameEnum(CurrentlyOutOfStock)</option>
+                                            <option value="@numSetOutOfStock" @(Product.Status == numSetOutOfStock ? "selected" : "")>@EnumCommonCode.GetDisplayNameEnum(SetOutOfStock)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                if (User.CheckPermission(Permission.ProductEditStatus))
+                                {
+                                    <div class="mt-4 m-2">
+                                        <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (User.CheckPermission(Permission.ProductViewService))
+                    {
+                        <div id="services" class="tab-pane p-3 mt-2 border" role="tabpanel">
+                            <div class="row p-2">
+                                <nav class="col-12 col-md-2 col-sm-3 box-shadow-1 p-3">
+                                    <ul class="nav nav-pills flex-column" id="nav-tab" role="tablist">
+                                        <li class="nav-item w-100">
+                                            <a class="nav-item nav-link show active" data-toggle="tab" href="#servicePrice">Giai đoạn giá</a>
+                                        </li>
+                                        <li class="nav-item w-100">
+                                            <a class="nav-item nav-link" data-toggle="tab" href="#groupService" id="href__groupService">
+                                                Gói dịch vụ
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <div class="tab-content p-1 col-12 col-md-10 box-shadow-1 p-3">
+                                    <div class="tab-pane fade show active" id="servicePrice" role="tabpanel" aria-labelledby="servicePrice-tab">
+                                        <div class="kt-portlet__head kt-portlet__head--lg">
+                                            <div class="kt-portlet__head-label">
+                                                <span class="kt-portlet__head-icon">
+                                                    <i class="kt-font-brand flaticon-interface-9"></i>
+                                                </span>
+                                                <h4 class="kt-portlet__head-title">
+                                                    Giai đoạn giá
+                                                </h4>
+                                            </div>
+                                            <div class="kt-portlet__head-toolbar">
+                                                <div class="kt-portlet__head-wrapper">
+                                                    <div class="kt-portlet__head-actions">
+                                                        @if (User.CheckPermission(Permission.ProductImportServicePrice))
+                                                        {
+                                                            <div class="text-right">
+                                                                <a href="@Url.Action("ImportServicePriceModal", "ServicePrice", new {productId = Model.ProductId})" class="btn btn-primary btn-elevate btn-icon-sm"
+                                                                   data-modal="" data-modal-size="modal-lg" data-callback="servicePrice.initImportServicePriceFromDigipostModal();">
+                                                                    <i class="flaticon2-add-square"></i>
+                                                                    <b>Import</b>
+                                                                </a>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dataTables_wrapper dt-bootstrap4 no-footer table-ServicePrice">
+                                            <div class="row headerTable pl-3">
+                                                <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                                                    <div class="col-12 col-sm-5">
+                                                        <div class="dataTables_length">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @FilterHelper.FindName()
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-bordered w-100" id="html_table_ServicePrice">
+                                                        <thead class="">
+                                                            <tr>
+                                                                <th>Tên</th>
+                                                                <th class="cursor-help" data-toggle="tooltip"
+                                                                    title="Tên giai đoạn giá của Digipost">Tên GĐG Digipost (?)</th>
+                                                                <th class="cursor-help" data-toggle="tooltip"
+                                                                    title="Trường này cho biết là giai đoạn giá của Digipost có được cập nhật và khác với Digiticket hay không.">
+                                                                    Digipost cập nhật (?)
+                                                                </th>
+                                                                <th>Ngày tạo</th>
+                                                                <th>Người tạo</th>
+                                                                <th>Ngày sửa gần nhất</th>
+                                                                <th>Người sửa gần nhất</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="dataTables_info">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="paginate_button page-item previous disabled">
+                                                                <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                                                    <i class="la la-angle-left"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li class="paginate_button page-item active">
+                                                                <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                            </li>
+                                                            <li class="paginate_button page-item next disabled">
+                                                                <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                                                    <i class="la la-angle-right"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="groupService" role="tabpanel">
+                                        <div class="kt-portlet__head kt-portlet__head--lg">
+                                            <div class="kt-portlet__head-label">
+                                                <span class="kt-portlet__head-icon">
+                                                    <i class="kt-font-brand flaticon-interface-9"></i>
+                                                </span>
+                                                <h4 class="kt-portlet__head-title">
+                                                    Gói dịch vụ
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="dataTables_wrapper dt-bootstrap4 no-footer table-groupService">
+                                            <div class="row headerTable pl-3">
+                                                <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                                                    <div class="col-12 col-sm-5">
+                                                        <div class="dataTables_length">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @FilterHelper.FindName()
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-bordered w-100" id="html_table_groupService">
+                                                        <thead class="">
+                                                            <tr>
+                                                                <th>Tên</th>
+                                                                <th>Tên ở Digipost</th>
+                                                                @*<th>Trạng thái</th>*@
+                                                                <th>Vé tối thiếu</th>
+                                                                <th>Vé tối đa</th>
+                                                                <th>Ngày tạo</th>
+                                                                <th>Người tạo</th>
+                                                                <th>Ngày sửa gần nhất</th>
+                                                                <th>Người sửa gần nhất</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="dataTables_info">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="paginate_button page-item previous disabled">
+                                                                <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                                                    <i class="la la-angle-left"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li class="paginate_button page-item active">
+                                                                <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                            </li>
+                                                            <li class="paginate_button page-item next disabled">
+                                                                <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                                                    <i class="la la-angle-right"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts {
+    <script>
+        var productId = "@Model.ProductId";
+        var permission = {
+            ProductEditGroupService: '@User.CheckPermission(Permission.ProductEditGroupService)' === 'True' ? true : false
+        }
+    </script>
+    <script src="~/Content/plugins/select2/js/select2.full.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-ui/jquery-ui.bundle.js?v=@SystemVersion.VersionJS"></script>
+    @*<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>*@
+
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/product/productGetByPage.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/product/productDetail.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/groupService/groupServiceDetail.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/servicePrice/servicePrice.js?v=@SystemVersion.VersionJS"></script>
+
+    @if (isReadOnly)
+    {
+        <script>
+            $(document).ready(() => {
+                loadModalContent(`${domain}/Product/ProductUpdateMainInfoModal?Id=@Product.Id&name=@Url.Encode(Product.Name)`, '', 'GroupServiceDetail.initUpdateMainInfo();');
+            })
+        </script>
+    }
+    else
+    {
+        <script>
+            ProductDetail.initDetail();
+            GroupServiceDetail.init();
+            servicePrice.init();
+        </script>
+    }
+}

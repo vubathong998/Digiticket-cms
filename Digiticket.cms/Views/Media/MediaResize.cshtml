@@ -1,0 +1,61 @@
+﻿@using Infrastructure.Config;
+@{
+    ViewBag.Title = "Resize " + ViewBag.FileName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        MediaResize <span class="text-success">@ViewBag.FileName</span>
+                    </h3>
+                </div>
+            </div>
+            @* content *@
+            <div class="row m-3">
+                @using (Html.BeginForm("ResizeMediaAction", "Media", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data",
+                    @class = "kt-form ajax-form row flex-row col-12 col-md-4",
+                    @id = "Resize"
+                }))
+                {
+                    <input type="hidden" readonly name="originalId" value="@ViewBag.Id" />
+                    <div class="col-12"><b>Thêm ảnh resize cho ảnh gốc</b>, tỷ lệ gốc (<b class="text-red">@ViewBag.AspectRatioX x @ViewBag.AspectRatioY</b>)</div>
+                    <div class="col-12 mt-2">
+                        <label for="resizeWidth">Chiều rộng ảnh resize</label><label class="text-red error ml-5" for="resizeWidth"></label>
+                        <input class="form-control" name="resizeWidth" />
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label for="resizeHeight">Chiều cao ảnh resize</label><label class="text-red error ml-5" for="resizeHeight"></label>
+                        <input class="form-control" name="resizeHeight" />
+                    </div>
+                    <div class="col-12 mt-2">
+                        <button type="submit" class="btn btn-success">Thêm</button>
+                    </div>
+                }
+                <div class="col-12 col-md-8 ml-3 border-left pl-4">
+                    <div id="showByRoot">
+
+                    </div>
+                </div>
+            </div>
+            @* end: content *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+@section customScripts{
+    <script src="~/Content/js/common-pages/media/mediaResize.js?v=@SystemVersion.VersionJS"></script>
+    <script>
+        mediaResize.init();
+    </script>
+}

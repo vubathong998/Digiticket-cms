@@ -1,0 +1,300 @@
+﻿@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using Services.Models.Responses.Content;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Models.Content;
+@using AutoMapper;
+@model PageResponse
+@{
+    ViewBag.Title = "Page " + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link href="~/Content/css/landingPage/pageDetail.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/plugins/jquery-ui/jquery-ui.bundle.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <input type="hidden" id="idPage" value="@Model.Id" />
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Thông tin page <span class="text-success">@Model.Name</span>
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="kt-portlet__head-actions">
+                            <div class="addPageComponentPlace display-none text-right">
+                                <a href="@Url.Action("PageComponentAddOrEditModal", "LandingPage", new { pageId = Model.Id, templateId = Model.TemplateId })" class="btn btn-primary btn-elevate btn-icon-sm"
+                                   data-modal="" data-modal-size="modal-xl" data-callback="pageDetail.onLoadAfterLoadAddPageComponentModal();">
+                                    <i class="la la-plus"></i>
+                                    Thêm page component
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <ul class="nav nav-tabs mb-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link show active" data-toggle="tab" href="#infor">Thông tin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#pageComponent"
+                           title="Nhấn vào đây để xem danh sách Page component (phần cắt ngang). Lần đầu tiên tạo thì nhấn vào 'Thêm page component' bên trên bên
+                           phải để thêm Page component (phần cắt ngang)">
+                            Page component (?)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#updateURLTarget">Update URL target</a>
+                    </li>
+                </ul>
+                <!-- Begin: Tab panes -->
+                <div class="tab-content mt-2">
+                    <div id="infor" class="tab-pane show active">
+                        @using (Html.BeginForm("PageEdit", "LandingPage", FormMethod.Post, new
+                        {
+                            enctype = "multipart/form-data",
+                            @class = "kt-form ajax-form",
+                            @id = "PageAddOrUpdateModal",
+                            spellcheck = false,
+                            showLoading = true
+                        }))
+                        {
+                            bool IsHasViewImg = Model.ViewImage.IsTrueOrFalse();
+                            var ClassInInfor = Model.ViewImage.IsTrueOrFalse() ? "" : "col-12 col-lg-6";
+                            var Status = "Chưa chọn";
+                            if (Model.Status >= 1 && Model.Status <= 2)
+                            {
+                                Status = EnumCommonCode.GetDisplayNameEnum<EnumCommonCode.EnumPageStatus>((EnumCommonCode.EnumPageStatus)Model.Status);
+                            }
+                            <input name="id" value="@Model.Id" type="hidden" />
+                            <div class="inforContain @(IsHasViewImg ? "row" : "" )">
+                                <div class="@(IsHasViewImg ? "info col-12 col-lg-6" : "row")">
+                                    <div class="@ClassInInfor">
+                                        <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                                        <input type="text" class="form-control" name="name" value="@Model.Name" />
+                                    </div>
+                                    <div class="@(IsHasViewImg ? "mt-4" : "") @ClassInInfor">
+                                        <label for="Description">Mô tả</label><label class="text-red error ml-5" for="Description"></label>
+                                        <input type="text" class="form-control" name="Description" value="@Model.Description" />
+                                    </div>
+                                    @if (Model.Type == (int)EnumCommonCode.EnumPageType.Blog)
+                                    {
+                                        <div class="selectCategoryTag col-12 col-lg-6 mt-4">
+                                            <label>Chọn chuyên mục blog </label>
+                                            <select class="form-control select-categoryTag">
+                                                @if (!Model.CategoryTags.IsNullOrEmpty())
+                                                {
+                                                    foreach (var item in Model.CategoryTags)
+                                                    {
+                                                        var modelLikeCategoryTag = Mapper.Map<PageTagResponseButLikeCategoryModel>(item);
+                                                        modelLikeCategoryTag.TagId = item.Id;
+                                                        <option value="@Json.Encode(modelLikeCategoryTag)" selected>@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                            @if (!Model.CategoryTags.IsNullOrEmpty())
+                                            {
+                                                for (int i = 0; i < Model.CategoryTags.Count; i++)
+                                                {
+                                                    var item = Model.CategoryTags[i];
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].Id" value="@item.Id" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].ParentId" value="@item.ParentId" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].CategoryId" value="@item.CategoryId" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].DestinationId" value="@item.DestinationId" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].TextView" value="@item.TextView" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].TextLink" value="@item.TextLink" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].Name" value="@item.Name" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].Type" value="@item.Type" />
+                                                    <input class="categoryTagInputHidden" type="hidden" name="CategoryTags[@i].Idx" value="@item.Idx" />
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    @if (Model.Type == (int)EnumCommonCode.EnumPageType.Blog)
+                                    {
+                                        <div class="selectAvatar col-12 col-lg-6 mt-4">
+                                            <label>Chọn avatar</label>
+                                            <select class="form-control select-pageAvatar">
+                                                <option value="@Model.Avatar" selected>@Model.Avatar</option>
+                                            </select>
+                                            <input type="hidden" value="@Model.Avatar" id="avatarElement" name="avatar" />
+                                        </div>
+                                    }
+                                    <div class="selectTag col-12 col-lg-6 mt-4">
+                                        <label>Chọn Tag</label>
+                                        <select class="form-control select-Tag" multiple="multiple">
+                                            @if (!Model.CategoryTags.IsNullOrEmpty())
+                                            {
+                                                foreach (var item in Model.Tags)
+                                                {
+                                                    <option value="@Json.Encode(item)" selected>@item.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                        @if (!Model.Tags.IsNullOrEmpty())
+                                        {
+                                            for (int i = 0; i < Model.Tags.Count; i++)
+                                            {
+                                                var item = Model.Tags[i];
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].Id" value="@item.Id" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].ParentId" value="@item.ParentId" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].CategoryId" value="@item.CategoryId" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].DestinationId" value="@item.DestinationId" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].TextView" value="@item.TextView" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].TextLink" value="@item.TextLink" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].Name" value="@item.Name" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].Type" value="@item.Type" />
+                                                <input class="tagInputHidden" type="hidden" name="tags[@i].Idx" value="@item.Idx" />
+                                            }
+                                        }
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="MetaTitle">MetaTitle</label><label class="text-red error ml-5" for="MetaTitle"></label>
+                                        <input class="form-control" name="MetaTitle" value="@Model.MetaTitle" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="MetaDescription">MetaDescription</label><label class="text-red error ml-5" for="MetaDescription"></label>
+                                        <input class="form-control" name="MetaDescription" value="@Model.MetaDescription" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="MetaImage">MetaImage</label><label class="text-red error ml-5" for="MetaImage"></label>
+                                        <input class="form-control" name="MetaImage" value="@Model.MetaImage" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="IsAuthenticated">Authenticated</label><label class="text-red error ml-5" for="LinkStyles"></label>
+                                        <select class="form-control cursor-pointer" name="IsAuthenticated">
+                                            <option value="false" @(Model.IsAuthenticated ? "" : "selected")>Không</option>
+                                            <option value="true" @(Model.IsAuthenticated ? "selected" : "")>Có</option>
+                                        </select>
+                                    </div>
+                                    @*<div class="mt-4 @ClassInInfor">
+                                            <label for="CustomData">CustomData</label><label class="text-red error ml-5" for="CustomData"></label>
+                                            <input type="text" class="form-control" name="CustomData" value="@Model.CustomData" />
+                                        </div>*@
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="HtmlClass">HtmlClass</label><label class="text-red error ml-5" for="HtmlClass"></label>
+                                        <input type="text" class="form-control" name="HtmlClass" value="@Model.HtmlClass" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="HtmlId">HtmlId</label><label class="text-red error ml-5" for="HtmlId"></label>
+                                        <input type="text" class="form-control" name="HtmlId" value="@Model.HtmlId" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="LinkStyles">LinkStyles</label><label class="text-red error ml-5" for="LinkStyles"></label>
+                                        <input class="custom-tag" name="LinkStyles" value="@(String.Join(",", Model.LinkStyles))" id="LinkPageStyles">
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="LinkScripts">LinkScripts</label><label class="text-red error ml-5" for="LinkScripts"></label>
+                                        <input class="custom-tag" name="LinkScripts" value="@(String.Join(",", Model.LinkScripts))" id="LinkPaegScripts">
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="TemplateName">TemplateName <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                        <input type="text" class="noClick readonly form-control" readonly value="@Model.TemplateName" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="TemplateViewName">TemplateViewName <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                        <input type="text" class="noClick readonly form-control" readonly value="@Model.TemplateViewName" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="SystemName">SystemName <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                        <input type="text" class="noClick readonly form-control" readonly value="@Model.SystemName" />
+                                    </div>
+                                    <div class="mt-4 @ClassInInfor">
+                                        <label for="Status">Status <span class="text-warning">(Không được phép cập nhật)</span></label>
+                                        <input type="text"
+                                               class="noClick readonly form-control" readonly value="@Status" />
+                                    </div>
+                                </div>
+                                @if (Model.ViewImage.IsTrueOrFalse())
+                                {
+                                    <div class="col-12 col-lg-6 mt-4">
+                                        <label>Ảnh mẫu</label>
+                                        @* Need to fix *@
+                                        <img src="@APIMediaConfig.APIMediaShowContentDefault@Model.ViewImage" class="p-3 border img-width-fit" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn-upload-media btn btn-success">Thay đổi</button>
+                            </div>
+                        }
+                    </div>
+                    <div id="pageComponent" class="tab-pane">
+                        <div class="tablePageComponent">
+
+                        </div>
+                    </div>
+                    <div id="updateURLTarget" class="tab-pane">
+                        @using (Html.BeginForm("PageUpdateURLTarget", "LandingPage", FormMethod.Post, new
+                        {
+                            enctype = "multipart/form-data",
+                            @class = "kt-form ajax-form row",
+                            @id = "pageUpdateURLTarget",
+                            spellcheck = false,
+                            showLoading = true
+                        }))
+                        {
+                            <input type="hidden" value="@Model.Id" name="id" />
+                            <div class="col-12 col-lg-3">
+                                <div class="">
+                                    <label for="URLTarget">Page Target</label><label class="text-red error ml-5" for="URLTarget"></label>
+                                    <select class="form-control select-URLTarget" id="URLTarget">
+                                        @*@if (!isReadOnly)
+                                            {
+                                                <option value="@PageComponentItems.Image" selected>@PageComponentItems.Image</option>
+                                            }*@
+                                    </select>
+                                    <input type="hidden" name="URLTarget" id="URLTargetInput" />
+                                </div>
+                                <div class="mt-4">
+                                    <label>TypeTarget</label>
+                                    <select class="form-control cursor-pointer" name="TypeTarget">
+                                        <option value="@((int)EnumCommonCode.EnumRedirectTypeTarget.Redirect301)">
+                                            @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumRedirectTypeTarget.Redirect301)
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn-upload-media btn btn-success">Thay đổi</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- End: Tab panes -->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Content -->
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts {
+    <script src="~/Content/plugins/jquery-ui/jquery-ui.bundle.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageCommon.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageDetail.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageComponent.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/landingPage/pageComponentItems.js?v=@SystemVersion.VersionJS"></script>
+
+    <script>
+        $(document).ready(function () {
+            pageDetail.init();
+            pageComponent.onUpdateCoponent();
+        })
+    </script>
+}

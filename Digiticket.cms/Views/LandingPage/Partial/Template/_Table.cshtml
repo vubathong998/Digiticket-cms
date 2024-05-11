@@ -1,0 +1,76 @@
+﻿@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using Services.Models.Responses.Content;
+@using Infrastructure.Extensions;
+@model List<TemplateComponentGetByTemplateResponse>
+
+
+<div class="row">
+    <div class="col-6">
+        <table class="table border templaTatable table-borderedss">
+            <thead class="headerList">
+                <tr>
+                    <th>Tên</th>
+                    <th>TypeName</th>
+                    <th>SystemName</th>
+                    <th>Idx</th>
+                    <th>ViewName</th>
+                    <th>Xóa map</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.IsNullOrEmpty())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.TypeName</td>
+                            <td>@item.SystemName</td>
+                            <td><input class="idxInput inputInTable" value="@item.Idx" data-id="@item.MapId" /></td>
+                            <td>@item.ViewName</td>
+                            <td>
+                                <button onclick="templateDetail.onDeleteMap(@item.MapId)" type="button" class="btn p-0 position-relative ml-3">
+                                    <i class="font-size-1r6 text-red flaticon-map"></i>
+                                    <div class="slash"></div>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">
+                            Không có Template component nào
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-6">
+        <label>Mẫu ảnh</label>
+        <div class="parttenImg">
+            @if (!Model.IsNullOrEmpty())
+            {
+                foreach (var item in Model)
+                {
+                    if (item.ViewImage.IsTrueOrFalse())
+                    {
+                        <div class="border p-2 pt-3">
+                            <img src="@APIMediaConfig.APIMediaShowContentDefault@item.ViewImage" class="img-width-fit" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="border p-2 pt-3">
+                            <h3><span>@item.Name</span> Chưa có mẫu ảnh</h3>
+                        </div>
+                    }
+
+                }
+            }
+        </div>
+    </div>
+</div>

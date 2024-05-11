@@ -1,0 +1,45 @@
+﻿@using Infrastructure.Extensions;
+@using DigiticketCMS.Models.Users;
+@using Services.Models;
+@model GetUserRolesViewModel
+
+<div class="modal-header">
+    <h1 class="modal-title">Danh sách quyền của user <span class="text-success">@Model.Name</span></h1>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="kt-portlet__body">
+        <div id="UsersPermissionModalTree">
+            <ul>
+                @foreach (var item in Model.UserPermission)
+                {
+                    <li data-jstree='{"opened": true,"selected": @(item.IsSelected ? "true" : "false")}'>
+                        <span>@item.Name</span>
+                        @UlTree(item.SubPermission)
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@helper UlTree(List<UserPermission> sub)
+{
+    if (!sub.IsNullOrEmpty())
+    {
+        <ul>
+            @foreach (var itemSub in sub)
+            {
+                <li>
+                    <span>@itemSub.Name</span>
+                    @if (!itemSub.SubPermission.IsNullOrEmpty())
+                    {
+                        UlTree(itemSub.SubPermission);
+                    }
+                </li>
+            }
+        </ul>
+    }
+}

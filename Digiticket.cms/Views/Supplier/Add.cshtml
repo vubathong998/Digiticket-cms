@@ -1,0 +1,146 @@
+﻿@using Infrastructure.Config;
+
+@{
+    ViewBag.Title = "Thêm mới nhà cung cấp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link href="~/Content/css/supplier/supplier.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/css/Supplier/supplierAdd.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+
+@using (Html.BeginForm("Add", "Supplier", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "ajax-form",
+    @id = "SupplierCreate",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+        <!-- begin:: Content -->
+        <div class="kt-container kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__head kt-portlet__head--lg">
+                    <div class="kt-portlet__head-label ">
+                        <h3 class="m-0">Thêm mới</h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+                            <div class="kt-portlet__head-actions">
+                                <div class=" text-right">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contentPart kt-container--fluid  kt-grid__item kt-grid__item--fluid px-3">
+                    <div class="input-float border p-3 mb-3 mt-3">
+                        <div class="row mt-2">
+                            <div class="col-md-6 col-12">
+                                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                       placeholder="Nhập tên">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label for="shortDescription">Mô tả ngắn</label>
+                                <input type="text" name="shortDescription"
+                                       class="form-control" placeholder="Nhập Mô tả tổng quát">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <label for="description">Mô tả cụ thể</label>
+                                <textarea name="description" class="form-control"
+                                          placeholder="Nhập mô tả cụ thể"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-float border p-3 mb-3">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <label for="address">Địa chỉ</label>
+                                <input type="text" name="address" class="form-control"
+                                       placeholder="Nhập địa chỉ">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label for="title">Chức vụ</label><label class="text-red error ml-5" for="title"></label>
+                                <input name="title" class="form-control" id="title" placeholder="Nhập chức vụ">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6 col-12">
+                                <label for="contactName">Tên liên lạc</label><label class="text-red error ml-5" for="contactName"></label>
+                                <input type="text" name="contactName" class="form-control" id="contactName"
+                                       placeholder="Nhập tên liên lạc">
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <label for="phone">Số điện thoại</label><label class="text-red error ml-5" for="phone"></label>
+                                <input name="phone" class="form-control" placeholder="Nhập số điện thoại" id="phone">
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <label for="email">Địa chỉ email</label><label class="text-red error ml-5" for="email"></label>
+                                <input name="email" class="form-control"
+                                       placeholder="Nhập địa chỉ email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-float border p-3 mb-3">
+                        <div class="row">
+                            <div class="tags-container col-12 tags-element w-100">
+                                <div>
+                                    <label for="hotline">Hotline</label><label class="text-red error ml-5" for="hotline"></label>
+                                </div>
+                                <input class="custom-tag" name="hotline" id="hotline" value="">
+                            </div>
+                            <div class="tags-container col-12 tags-element w-100 mt-4">
+                                <label for="bookingEmail">BookingEmail</label><label class="text-red error ml-5" for="bookingEmail"></label>
+                                <input class="custom-tag" name="bookingEmail" value="" id="bookingEmail">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-float border p-3">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <label for="companyName">Tên doanh nghiệp</label>
+                                <input type="text" name="companyName" class="form-control"
+                                       placeholder="Nhập tên doanh nghiệp">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label for="companyAddress">Địa chỉ doanh nghiệp</label>
+                                <input name="companyAddress" class="form-control"
+                                       placeholder="Nhập địa chỉ doanh nghiệp">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6 col-12">
+                                <label for="companyTaxCode">Mã số thuế</label>
+                                <input type="text" name="companyTaxCode" class="form-control"
+                                       placeholder="Nhập mã số thuế">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label for="companyRepresentative">Người đại diện</label>
+                                <input name="companyRepresentative"
+                                       class="form-control" placeholder="Nhập người đại diện">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-3">
+                    <button type="submit" class="btn btn-primary">Thêm mới</button>
+                </div>
+            </div>
+        </div>
+        <!-- end:: Content -->
+    </div>
+}
+
+@section customScripts{
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/common-pages/supplier/supplierAdd.js?v=@SystemVersion.VersionJS"></script>
+}

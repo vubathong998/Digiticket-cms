@@ -1,0 +1,17 @@
+﻿@using Services.Models.Responses.Supplier;
+@using Infrastructure.Extensions;
+@model List<SupplierTenantResponse>
+
+<ul class="list-suggest mt-2" style="padding-inline-start:1rem">
+    @if (!Model.IsNullOrEmpty())
+    {
+        foreach (var item in Model)
+        {
+            <li class="pointer mt-2 template" data-id="@item.TenantId" data-code="@item.Code">@item.Name</li>
+        }
+    }
+    else
+    {
+        <li class="mt-2">Không có kết quả</li>
+    }
+</ul>

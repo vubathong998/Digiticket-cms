@@ -1,0 +1,36 @@
+﻿@using (Html.BeginForm("MediaAdd", "Media", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "mediaUpload",
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        <h1 class="modal-title">Upload ảnh gốc mới</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <label for="file">Ảnh gốc</label><label class="text-red error ml-5" for="fileImage"></label>
+            <input class="form-control" accept="image/png, image/gif, image/jpeg" type="file" name="fileImage" />
+        </div>
+        <b class="text-red mt-4">
+            Lưu ý: Tiên file dùng để tạo link ảnh không được chứa các ký tự tiếng Việt và các ký tự đặc biệt ngoại trừ dấu
+            gạch ngang (-) và dấu gạch dưới (_)
+        </b>
+            <input type="hidden" class="resizeWidth" name="resizeWidth"/>
+            <input type="hidden" class="resizeHeight" name="resizeHeight" />
+        @*<div class="mt-4">
+            <label for="resizeWidth">Chiều rộng ảnh gốc</label><label class="text-red error ml-5" for="resizeWidth"></label>
+        </div>
+        <div class="mt-4">
+            <label for="resizeHeight">Chiều cao ảnh gốc</label><label class="text-red error ml-5" for="resizeHeight"></label>
+        </div>*@
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

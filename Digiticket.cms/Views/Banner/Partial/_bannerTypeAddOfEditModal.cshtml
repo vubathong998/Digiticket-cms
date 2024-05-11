@@ -1,0 +1,99 @@
+﻿@using Services.Models.Responses.Banner;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@model BannerTypeResponse
+@{
+    bool isReadOnly = false;
+    if (Model.Id == 0)
+    {
+        isReadOnly = true;
+    }
+}
+@using (Html.BeginForm(Model.Id == 0 ? "BannerTypeAdd" : "BannerTypeEdit", "Banner", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "BannerTypeAddOrEdit",
+    spellcheck = false
+}))
+{
+    <div class="modal-header">
+        @if (isReadOnly)
+        {
+            <h1 class="modal-title">
+                Thêm mới bannerType
+            </h1>
+        }
+        else
+        {
+            <h1 class="modal-title">
+                Update bannerType <span class="text-success">@(Model.Name.IsTrueOrFalse() ? Model.Name : "")</span>
+            </h1>
+        }
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" value="@Model.Id" name="id" readonly />
+        <div>
+            <div class="">
+                <label for="name">Chọn danh mục</label>
+                @if (isReadOnly)
+                {
+                    <select class="cursor-pointer form-control kt-select2-category--modal" name="categoryId">
+                        <option value="@Guid.Empty">Chưa chọn danh mục</option>
+                        @if (!Model.Categories.IsNullOrEmpty())
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+                                <optgroup label="@category.Name">
+                                    @foreach (var subCategory in category.SubCategory)
+                                    {
+                                        <option value="@subCategory.Id">@subCategory.Name</option>
+                                    }
+                                </optgroup>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="cursor-pointer form-control kt-select2-category--modal--disable">
+                        <option value="">@(Model.CategoryName.IsTrueOrFalse() ? Model.CategoryName : "Không có")</option>
+                    </select>
+                }
+            </div>
+            <div class="mt-4">
+                <label for="name">Chọn điểm đến</label>
+                @if (isReadOnly)
+                {
+                    <select class="form-control kt-select2-destination--modal cursor-pointer" name="destinationId">
+                        <option value="@Guid.Empty">Chưa chọn điểm đến</option>
+                        @if (!Model.Destinations.IsNullOrEmpty())
+                        {
+                            foreach (var destination in Model.Destinations)
+                            {
+                                <option value="@destination.Id">@destination.Name</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="form-control kt-select2-destination--modal--disable cursor-pointer">
+                        <option value="">@(Model.DestinationName.IsTrueOrFalse() ? Model.DestinationName : "Không có")</option>
+                    </select>
+                }
+            </div>
+            <div class="mt-4">
+                <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+                <input class="form-control" name="name" id="name" value="@Model.Name" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

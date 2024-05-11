@@ -1,0 +1,126 @@
+﻿@using Infrastructure.Config;
+@using Infrastructure.Extensions;
+<!DOCTYPE html>
+<!--
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 4 & Angular 8
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+Renew Support: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<html lang="en">
+<!-- begin::Head -->
+<head>
+    <base href="">
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--begin::Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700">
+    <!--end::Fonts -->
+    <!--begin::Page Vendors Styles(used by this page) -->
+    <link href="~/Content/plugins/custom/datatables/datatables.bundle.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <!--end::Page Vendors Styles -->
+    <!--begin::Global Theme Styles(used by all pages) -->
+    <link href="~/Content/plugins/global/plugins.bundle.css?v=@SystemVersion.VersionJS" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/style.bundle.css?v=@SystemVersion.VersionJS" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/loading.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <link href="~/Content/css/custom.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <!--end::Global Theme Styles -->
+    <!--begin::genaral css(used by all pages) -->
+    <link href="~/Content/css/genaral/Common-another.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <link href="~/Content/css/genaral/GlobalStyle.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <link href="~/Content/css/genaral/GlobalPicture.css?v=@SystemVersion.VersionJS" rel="stylesheet" />
+    <!--end::genaral css(used by all pages)-->
+    <!--begin::Layout Skins(used by all pages) -->
+    <!--end::Layout Skins -->
+    <link rel="shortcut icon" href="~/Content/Images/favicon-digiticket-01.svg" />
+    @RenderSection("customStyles", required: false)
+</head>
+<!-- end::Head -->
+<!-- begin::Body -->
+<body class="kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-aside--minimize kt-page--loading">
+    <!-- begin:: Page -->
+    @Html.Partial("~/Views/Shared/_HeaderMobile.cshtml")
+    <div class="kt-grid kt-grid--hor kt-grid--root">
+        <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
+            @Html.Partial("~/Views/Shared/_AsideMenu.cshtml")
+            <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper mb-4" id="kt_wrapper">
+                @Html.Partial("~/Views/Shared/_Header.cshtml")
+                @RenderBody()
+                @Html.Partial("~/Views/Shared/_Footer.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="fakebox w-90 h-100 position-fixed" style="display:none;"></div>
+    <!-- end:: Page -->
+    <div class="my-loading" style="display: none;">
+        <div align="center" class="cssload-fond">
+            <div class="cssload-container-general">
+                <div class="cssload-internal"><div class="cssload-ballcolor cssload-ball_1"> </div></div>
+                <div class="cssload-internal"><div class="cssload-ballcolor cssload-ball_2"> </div></div>
+                <div class="cssload-internal"><div class="cssload-ballcolor cssload-ball_3"> </div></div>
+                <div class="cssload-internal"><div class="cssload-ballcolor cssload-ball_4"> </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- begin::Scrolltop -->
+    <div id="kt_scrolltop" class="kt-scrolltop">
+        <i class="fa fa-arrow-up"></i>
+    </div>
+    <!-- end::Scrolltop -->
+    <!-- begin::Global Config(global config for global JS sciprts) -->
+    <script>
+        var KTAppOptions = {
+            "colors": {
+                "state": {
+                    "brand": "#22b9ff",
+                    "light": "#ffffff",
+                    "dark": "#282a3c",
+                    "primary": "#5867dd",
+                    "success": "#34bfa3",
+                    "info": "#36a3f7",
+                    "warning": "#ffb822",
+                    "danger": "#ff0000"
+                },
+                "base": {
+                    "label": ["#c5cbe3", "#a1a8c3", "#3d4465", "#3e4466"],
+                    "shape": ["#f0f3ff", "#d9dffa", "#afb4d4", "#646c9a"]
+                }
+            }
+        };
+        //config ngôn ngữ cho tiền tệ
+        const CountryCode = 'vi';
+        const domain = '@SystemConfig.System_Domain';
+        const domainFE = '@SystemConfig.System_FEDomain' + '/vi/';
+        const domainCDN_Media = '@APIMediaConfig.APIMediaDefault';
+        const domainCDN_MediaShowContent = '@APIMediaConfig.APIMediaShowContentDefault';
+        const commissionUnit = { cash: 1, percent: 2 };
+        var CurrentCulture = '@System.Globalization.CultureInfo.CurrentUICulture.Parent.Name';
+        var Currency = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" });
+
+    </script>
+    <!-- end::Global Config -->
+    <!--begin::Global Theme Bundle(used by all pages) -->
+    <script src="~/Content/plugins/global/plugins.bundle.js?v=@SystemVersion.VersionJS" type="text/javascript"></script>
+    <script src="~/Content/js/scripts.bundle.js?v=@SystemVersion.VersionJS" type="text/javascript"></script>
+    <script src="~/Content/plugins/custom/datatables/datatables.bundle.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/ckeditor/ckeditor.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/moment.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common/common.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common/common.ajax.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common/common.modalform.js?v=@SystemVersion.VersionJS"></script>
+    <!--end::Global Theme Bundle -->
+    <!--begin::Global Theme common another -->
+    <script src="~/Content/js/common/common-another.js"></script>
+    <!--end::Global Theme Bundle -->
+    @RenderSection("customScripts", required: false)
+</body>
+<!-- end::Body -->
+</html>

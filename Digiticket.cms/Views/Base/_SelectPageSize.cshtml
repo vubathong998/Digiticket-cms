@@ -1,0 +1,14 @@
+﻿@model string
+<label class="select-page-size">
+    <label style="font-weight:bold;">Hiển thị: </label>
+    <div>
+        <select class="custom-select form-control page-size cursor-pointer">
+            @*<option value="1" @(Model == "1" ? "selected" : "")>1</option>*@
+            <option value="5" @(Model == "5" ? "selected" : "")>5</option>
+            <option value="10" @(Model == "10" ? "selected" : "")>10</option>
+            <option value="20" @(Model == "20" ? "selected" : "")>20</option>
+            <option value="50" @(Model == "50" ? "selected" : "")>50</option>
+            <option value="100" @(Model == "100" ? "selected" : "")>100</option>
+        </select>
+    </div>
+</label>

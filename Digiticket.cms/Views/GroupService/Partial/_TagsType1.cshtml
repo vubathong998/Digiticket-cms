@@ -1,0 +1,46 @@
+﻿@using Infrastructure.Config;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Models.GroupService
+@model GroupServiceResponseViewModel
+
+@{ 
+    var GroupService = Model.GroupServiceResponse;
+}
+
+@using (Html.BeginForm("GroupServiceUpdateTags", "GroupService", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "groupServiceUpdateTagsInfo",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    <div class="BaseInfo py-3 border">
+        <input type="hidden" value="@GroupService.Id" name="Id" readonly />
+        <div class="col-12 ml-1" id="select-tags">
+            <label for="tags">Tags</label><label class="text-red error ml-5" for="tags"></label>
+            <div class="tags-container--groupService">
+                <div class="tags-element">
+                    <select class="form-control select-tags" data-type="@((int)EnumCommonCode.ETagsItemType.GroupService)" data-key="tags" multiple="multiple">
+                        @if (!GroupService.Tags.IsNullOrEmpty())
+                        {
+                            foreach (var Tag in GroupService.Tags)
+                            {
+                                <option value="@Json.Encode(Tag)" selected>@Tag.Name </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (User.CheckPermission(Permission.ProductEditGroupService))
+    {
+        <div class="mt-3 ">
+            <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+        </div>
+    }
+}

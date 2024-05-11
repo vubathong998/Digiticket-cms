@@ -1,0 +1,129 @@
+﻿@using DigiticketCMS.Models.Tags;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Config;
+@model TagsAddModalViewModel
+
+@using (Html.BeginForm("Add", "Tags", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "TagsAdd",
+    spellcheck = false
+}))
+{
+    <input type="hidden" value="@Model.ParentId" name="parentId" readonly />
+    <div class="modal-header">
+        @if (Model.ParentId == 0)
+        {
+            <h1 class="modal-title">Thêm mới parent Tags</h1>
+        }
+        else
+        {
+            <h1 class="modal-title">
+                Thêm mới sub tags
+                @if (!string.IsNullOrEmpty(Model.ParentName) && Model.ParentName != "null")
+                {
+                    <span>| </span><span class="text-success"> parent: @Model.ParentName</span>
+                }
+            </h1>
+            <input type="hidden" value="@Model.CategoryId" name="categoryId" />
+            <input type="hidden" value="@Model.DestinationId" name="destinationId" />
+        }
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="mt-4">
+            <label>Chọn danh mục</label><label class="text-red error ml-5" for="categoryId"></label>
+            @if (string.IsNullOrEmpty(Model.CategoryId))
+            {
+                <select class="cursor-pointer form-control kt-select2-category--modal" name="categoryId">
+                    <option value="00000000-0000-0000-0000-000000000000">Không chọn</option>
+                    @if (!Model.Categories.IsNullOrEmpty())
+                    {
+                        foreach (var category in Model.Categories)
+                        {
+                            <optgroup label="@category.Name">
+                                @foreach (var subCategory in category.SubCategory)
+                                {
+                                    <option value="@subCategory.Id">@subCategory.Name</option>
+                                }
+                            </optgroup>
+                        }
+                    }
+                </select>
+            }
+            else
+            {
+                <select class="cursor-pointer form-control kt-select2-category--modal--disable" name="categoryId">
+                    <option value="@Model.CategoryId">@(Model.CategoryName.IsTrueOrFalse() ? Model.CategoryName : "Không có")</option>
+                </select>
+            }
+        </div>
+        <div class="mt-4">
+            <label>Chọn điểm đến</label><label class="text-red error ml-5" for="destinationId"></label>
+            @if (string.IsNullOrEmpty(Model.DestinationId))
+            {
+                <select class="form-control kt-select2-destination--modal cursor-pointer" name="destinationId">
+                    <option value="00000000-0000-0000-0000-000000000000">Không chọn</option>
+                    @if (!Model.Destinations.IsNullOrEmpty())
+                    {
+                        foreach (var destination in Model.Destinations)
+                        {
+                            <option value="@destination.Id">@destination.Name</option>
+                        }
+                    }
+                </select>
+            }
+            else
+            {
+                <select class="form-control kt-select2-destination--modal--disable cursor-pointer" name="destinationId">
+                    <option value="@Model.DestinationId">@(Model.DestinationName.IsTrueOrFalse() ? Model.DestinationName : "Không có")</option>
+                </select>
+            }
+        </div>
+        <div class="mt-4">
+            <label for="name">Tên</label><label class="text-red error ml-5" for="name"></label>
+            <input type="text" class="form-control" name="name" id="name" />
+        </div>
+        <div class="mt-4">
+            <label for="textView">Ký tự hiển thị</label><label class="text-red error ml-5" for="textView"></label>
+            <input type="text" class="form-control" name="textView" id="textView" />
+        </div>
+        <input type="hidden" class="form-control" name="textLink" readonly />
+        <div class="mt-4">
+            <label for="type">Loại</label>
+            @if(Model.ParentId != 0)
+                {
+                    <input type="hidden" name="type" value="@Model.Type" />
+                }
+            <select class="form-control cursor-pointer @(Model.ParentId != 0 ? "kt-select2-type--modal--disable" : "")" name="type">
+                <option value="0" @(Model.Type == 0)>Không chọn</option>
+                <option value="@((int)EnumCommonCode.ETagsItemType.Product)" @((int)EnumCommonCode.ETagsItemType.Product == Model.Type ? "selected" : "")>
+                    @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.Product)
+                </option>
+                <option value="@((int)EnumCommonCode.ETagsItemType.GroupService)" @((int)EnumCommonCode.ETagsItemType.GroupService == Model.Type ? "selected" : "")>
+                    @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupService)
+                </option>
+                <option value="@((int)EnumCommonCode.ETagsItemType.GroupServiceProcess)" @((int)EnumCommonCode.ETagsItemType.GroupServiceProcess == Model.Type ? "selected" : "")>
+                    @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupServiceProcess)
+                </option>
+                <option value="@((int)EnumCommonCode.ETagsItemType.ProductHighlight)" @((int)EnumCommonCode.ETagsItemType.ProductHighlight == Model.Type ? "selected" : "")>
+                    @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.ProductHighlight)
+                </option>
+                <option value="@((int)EnumCommonCode.ETagsItemType.GroupServiceView)" @((int)EnumCommonCode.ETagsItemType.GroupServiceView == Model.Type ? "selected" : "")>
+                    @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.ETagsItemType.GroupServiceView)
+                </option>
+            </select>
+        </div>
+        <div class="mt-4">
+            <label for="idx">Index</label><label class="text-red error ml-5" for="idx"></label>
+            <input min="0" type="number" class="form-control" name="idx" value="0" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

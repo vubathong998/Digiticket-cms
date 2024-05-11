@@ -1,0 +1,36 @@
+﻿supplierContent > div {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.error {
+    font-size: 1.1rem;
+}
+
+#productFromDigiPost div.dataTables_wrapper div.dataTables_scroll {
+    margin: 0 !important;
+}
+#supplierBanks div.dataTables_wrapper div.dataTables_scroll,
+#product div.dataTables_wrapper div.dataTables_scroll {
+    margin-top: 5px !important;
+}
+
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    #html_table_ProductGetListFromDigipost_wrapper .dataTables_scrollBody {
+        max-height: calc(100vh - 36rem) !important;
+    }
+    #html_table_Product_wrapper .dataTables_scrollBody {
+        max-height: calc(100vh - 40.8rem) !important;
+    }
+}
+@media screen and (min-width: 1400px) {
+    #html_table_ProductGetListFromDigipost_wrapper .dataTables_scrollBody {
+        max-height: calc(100vh - 32.2rem) !important;
+    }
+    #html_table_Product_wrapper .dataTables_scrollBody {
+        max-height: calc(100vh - 36.6rem) !important;
+    }
+}

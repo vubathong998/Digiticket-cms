@@ -1,0 +1,140 @@
+﻿@using DigiticketCMS.Config;
+@*<div class="modal fade show" id="selectTypeModal" role="dialog" aria-labelledby="" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="">
+                <div class="modal-header">
+                    <h1 class="modal-title">
+                        Chọn thể loại cho Page component item
+                    </h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-control cursor-pointer mt-5">
+                        <option value="null">Chưa chọn</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Experience_1)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Experience_1)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_6)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_6)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Left)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Left)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Btn_Link)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Btn_Link)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_8)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_8)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Left)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Left)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_3)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_3)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Left)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Left)</option>
+                        <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_3)">@EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_3)</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="continueAddPageComponentItems btn btn-primary">Tiếp tục</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title">
+                    Chọn thể loại cho Page component item
+                </h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <select class="form-control cursor-pointer mt-5">
+                    <option value="null">Chưa chọn</option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Medium)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_In_Component_Intro)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Experience_1)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Experience_1)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_6)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_6)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Left)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Left)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Btn_Link)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Btn_Link)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_8)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_8)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Left)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Left)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_3)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_3)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Left)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Left)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_3)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_3)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Big)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Big)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Small)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_Big)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Video_1_Right)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Video_1_Right)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Image_1_Right)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Image_1_Right)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Big)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_3_Small)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_Right)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_Right)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Big)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_5_Small)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Slide_1)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Slide_1)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_4)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_4)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_2_Medium)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Banner_1_4)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Banner_1_4)
+                    </option>
+                    <option value="@((int)EnumCommonCode.EnumPageComponentItemType.Product_1_3)">
+                        @EnumCommonCode.GetDisplayNameEnum(EnumCommonCode.EnumPageComponentItemType.Product_1_3)
+                    </option>
+                    <option value="9999">
+                        99990
+                    </option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <h1>hihi</h1>
+                <button type="submit" class="continueAddPageComponentItems btn btn-primary">Tiếp tục</button>
+            </div>
+        </div>
+    </div>
+</div>

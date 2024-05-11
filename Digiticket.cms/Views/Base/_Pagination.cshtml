@@ -1,0 +1,78 @@
+﻿@model DigiticketCMS.Models.PagingInfo
+<ul class="pagination pagination-lg">
+    <li class="paginate_button page-item previous @(Model.page == 1 ? "disabled" : "")">
+        <a href="javascript:void(0)" data-dt-idx="@(Model.page - 1)" tabindex="0" class="page-link">
+            <i class="la la-angle-left"></i>
+        </a>
+    </li>
+    @if (Model.pages < 8)
+    {
+        for (int i = 1; i <= Model.pages; i++)
+        {
+            <li class="paginate_button page-item @(i == Model.page ? "active" : "")">
+                <a href="javascript:void(0)" data-dt-idx="@i" tabindex="0" class="page-link">@i</a>
+            </li>
+        }
+    }
+    else
+    {
+        if (Model.page < 5)
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                <li class="paginate_button page-item @(i == Model.page ? "active" : "")">
+                    <a href="javascript:void(0)" data-dt-idx="@i" tabindex="0" class="page-link">@i</a>
+                </li>
+            }
+            <li class="paginate_button page-item disabled">
+                <a href="javascript:void(0)" data-dt-idx="6" tabindex="0" class="page-link">…</a>
+            </li>
+            <li class="paginate_button page-item">
+                <a href="javascript:void(0)" data-dt-idx="@Model.pages" tabindex="0" class="page-link">@Model.pages</a>
+            </li>
+        }
+        else if (5 <= Model.page && Model.page <= Model.pages - 4)
+        {
+            <li class="paginate_button page-item">
+                <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+            </li>
+            <li class="paginate_button page-item disabled">
+                <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">…</a>
+            </li>
+            for (int i = -2; i < 3; i++)
+            {
+                <li class="paginate_button page-item @(i == 0 ? "active" : "")">
+                    <a href="javascript:void(0)" data-dt-idx="@(Model.page + i)" tabindex="0" class="page-link">@(Model.page + i)</a>
+                </li>
+            }
+            <li class="paginate_button page-item disabled">
+                <a href="javascript:void(0)" data-dt-idx="8" tabindex="0" class="page-link">…</a>
+            </li>
+            <li class="paginate_button page-item">
+                <a href="javascript:void(0)" data-dt-idx="@Model.pages" tabindex="0" class="page-link">@Model.pages</a>
+            </li>
+        }
+        else
+        {
+            <li class="paginate_button page-item">
+                <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+            </li>
+            <li class="paginate_button page-item disabled">
+                <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">…</a>
+            </li>
+            for (int i = -4; i <= 0; i++)
+            {
+                <li class="paginate_button page-item @(i == Model.page - Model.pages ? "active" : "")">
+                    <a href="javascript:void(0)" data-dt-idx="@(Model.pages + i)" tabindex="0" class="page-link">@(Model.pages + i)</a>
+                </li>
+            }
+        }
+    }
+    <li class="paginate_button page-item next @(Model.page == Model.pages ? "disabled" : "")">
+        <a href="javascript:void(0)" data-dt-idx="@(Model.page + 1)" tabindex="0" class="page-link">
+            <i class="la la-angle-right"></i>
+        </a>
+    </li>
+</ul>
+
+

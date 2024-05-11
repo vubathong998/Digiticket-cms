@@ -1,0 +1,11 @@
+﻿@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 38rem) !important;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 33.7rem) !important;
+    }
+}

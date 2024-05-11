@@ -1,0 +1,136 @@
+﻿@using DigiticketCMS.Models.Tags;
+@using Infrastructure.Extensions;
+@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+@model ProductInfoToView
+@{
+    ViewBag.Title = "Danh sách sản phẩm hot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Danh sách sản phẩm hot
+                    </h3>
+                </div>
+                @if (User.CheckPermission(Permission.SettingEdit))
+                {
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+                            <div class="kt-portlet__head-actions">
+                                <div class=" text-right">
+                                    <a href="@Url.Action("ProductAddOrUpdateHotModal", "Product", new { isAdd = true })"
+                                       data-modal=""
+                                       data-modal-size="modal-lg"
+                                       class="btn btn-primary btn-elevate btn-icon-sm"
+                                       data-callback="productGetByPage.initAddOrUpdateHotModal();">
+                                        <i class="la la-plus"></i>
+                                        Thêm mới product hot
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @* content table *@
+            <div class="kt-portlet__body">
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer table-Hot">
+                    <div class="row headerTable pl-3">
+                        <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                            <div class="col-12 col-sm-5">
+                                <div class="dataTables_length">
+
+                                </div>
+                            </div>
+                        </div>
+                        @FilterHelper.ClearFilter()
+                        @FilterHelper.FindName("col-sm-12 col-lg-3")
+                        @FilterHelper.Category(Model.Categories)
+                        @FilterHelper.destination(Model.Destinations)
+                        @FilterHelper.Status()
+                        @FilterHelper.Public()
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="html_table_Hot">
+                                <thead class="">
+                                    <tr>
+                                        <th class="sortable" data-field="name">Tên sản phẩm</th>
+                                        <th data-field="isHot" title="Sản phẩm hot">SP hot</th>
+                                        <th data-field="isHot">Danh mục</th>
+                                        <th data-field="isHot">Điểm đến</th>
+                                        <th data-field="type">Trạng thái</th>
+                                        <th class="sortable" data-field="idxHot">Idx</th>
+                                        <th data-field="public">Public</th>
+                                        <th class="sortable" data-field="CreatedDate">Ngày tạo</th>
+                                        <th class="sortable" data-field="createdByName">Người tạo</th>
+                                        <th class="sortable">Ngày sửa gần nhất</th>
+                                        <th class="sortable">Người sửa gần nhất</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="dataTables_info">
+
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* end: content table *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts{
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/common-pages/product/productGetByPage.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script>
+        var permission = {
+            edit: '@(User.CheckPermission(Permission.SettingEdit))' === 'True' ? true : false
+        }
+
+        $(document).ready(() => {
+            productGetByPage.initHot();
+        })
+    </script>
+}
+

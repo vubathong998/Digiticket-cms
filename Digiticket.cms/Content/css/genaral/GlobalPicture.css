@@ -1,0 +1,51 @@
+﻿.ListResize .img img{
+    max-width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.imgTiny {
+    width: 50px;
+    height: 50px;
+}
+
+.imgSmall {
+    max-width: 200px;
+    object-fit: cover;
+    height: 100px;
+}
+.imgSmall2 {
+    max-width: 160;
+    object-fit: cover;
+    height: 100px;
+}
+.imgSmall3 {
+    max-width: 50px;
+    object-fit: cover;
+    height: 50px;
+}
+
+.videoSmall {
+    object-fit: cover;
+    max-width: 200px;
+    height: 170px;
+}
+.videoSmall2 {
+    object-fit: cover;
+    max-width: 160px;
+    height: 110px;
+}
+
+.img-fit {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.img-width-fit {
+    width: 100%;
+}
+
+/* .ServicePrice__detail {
+    display: none;
+} */

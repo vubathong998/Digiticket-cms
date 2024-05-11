@@ -1,0 +1,113 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.ServicePrice;
+@model List<ServicePriceResponse>
+
+@{
+    bool isExitAnyFalse = Model.Any(m => m.IsExist == false);
+    bool isMoreThan2IsExistFalse = Model.Where(m => m.IsExist == false).ToList().Count > 1;
+    bool isMoreThan2IsChanged = Model.Where(m => m.IsChanged).ToList().Count > 1;
+    bool isMoreThan1IsChanged = Model.Where(m => m.IsChanged).ToList().Count > 0;
+}
+
+<div class="">
+    <div class="modal-header">
+        <h1 class="modal-title">Import giai đoạn giá từ digipost</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="importServicepriceTableModal table dataTables_wrapper mt-2">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>
+                        <div class="text-center">Xem sự khác biệt</div>
+                    </th>
+                    <th>
+                        <div class="text-left">
+                            @if (isMoreThan2IsExistFalse)
+                            {
+                                <input type="checkbox" id="selectAllToImport" class="cursor-pointer">
+                            }
+                            Import
+                        </div>
+                    </th>
+                    <th>
+                        <div class="@(!isMoreThan2IsChanged ? "text-center" : "text-left")">
+                            @if (isMoreThan2IsChanged)
+                            {
+                                <input type="checkbox" id="selectAllToUpdate" class="cursor-pointer">
+                            }
+                            Cập nhật
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.IsNullOrEmpty())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr data-id="@item.Id">
+                            <td>@item.Name</td>
+                            <td>
+                                <div class="text-center">
+                                    @if (item.IsExist)
+                                    {
+                                        if (item.IsChanged)
+                                        {
+                                            <button class="btn btn-info btn-sm"
+                                                    onclick="servicePrice.onLoadCompareServicePriceModal(`@Json.Encode(item)`)">
+                                                Xem
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span>Không có khác biệt</span>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td class="rowMuptipleImport">
+                                @if (!item.IsExist)
+                                {
+                                    <div class="text-left">
+                                        <input type="checkbox" data-id="@item.Id" class="selectServicePriceToImport cursor-pointer" />
+                                    </div>
+                                }
+                            </td>
+                            <td class="rowMuptipleUpdate">
+                                @if (item.IsExist)
+                                {
+                                    if (item.IsChanged)
+                                    {
+                                        <div class="@(!isMoreThan2IsChanged ? "text-center" : "text-left")">
+                                            <input type="checkbox" data-id="@item.Id" class="selectServicePriceToUpdate cursor-pointer " />
+                                        </div>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4"><div class="text-center">Không có giai đoạn giá nào!</div></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        @if (isExitAnyFalse)
+        {
+            <button type="button" class="mutipleImportFromDigipost btn btn-primary">Import Giai đoạn giá Đã chọn</button>
+        }
+        @if (isMoreThan1IsChanged)
+        {
+            <button type="button" class="mutipleUpdateFromDigipost btn btn-success">Cập nhật giai đoạn giá Đã chọn</button>
+        }
+    </div>
+</div>

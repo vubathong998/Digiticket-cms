@@ -1,0 +1,51 @@
+﻿@model DigiticketCMS.Models.ViewModel.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+<!--begin::Head-->
+<div class="kt-login__head">
+    @*<span class="kt-login__signup-label">Don't have an account yet?</span>&nbsp;&nbsp;
+        <a href="#" class="kt-link kt-login__signup-link">Sign Up!</a>*@
+    <div class="mb-2">
+        <span class="kt-login__signup-label">Bạn chưa có tài khoản?</span>&nbsp;&nbsp;
+        <a href="@Url.Action("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl })" class="kt-link kt-login__signup-link">Đăng ký!</a>
+    </div>
+    <div>
+        <span class="kt-login__signup-label">Bạn cần giúp đỡ?</span>&nbsp;&nbsp;
+        <a class="kt-link kt-login__signup-link" href="@Url.Action("ForgotPassword", "Account", new { returnUrl = ViewBag.ReturnUrl })">Quên mật khẩu?</a>
+    </div>
+</div>
+<!--end::Head-->
+<!--begin::Body-->
+<div class="kt-login__body">
+    <!--begin::Signin-->
+    <div class="kt-login__form">
+        <div class="kt-login__title">
+            <h3>Login</h3>
+        </div>
+        <!--begin::Form-->
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { enctype = "multipart/form-data", @class = "kt-form", @id = "kt_login_form" }))
+        {
+            @Html.AntiForgeryToken()
+            if (ViewBag.Message != null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    <div class="alert-text">@ViewBag.Message</div>
+                </div>
+            }
+            <div class="form-group">
+                <input class="form-control" type="email" placeholder="Tên đăng nhập" name="Username" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" placeholder="Mật khẩu" name="Password" autocomplete="off">
+            </div>
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="kt-login__actions">
+                <button id="kt_login_signin_submit" type="submit" class="btn btn-primary btn-elevate kt-login__btn-primary mx-auto">Login</button>
+            </div>
+        }
+    </div>
+    <!--end::Signin-->
+</div>
+<!--end::Body-->

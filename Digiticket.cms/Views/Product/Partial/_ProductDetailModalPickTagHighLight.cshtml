@@ -1,0 +1,59 @@
+﻿@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+@using DigiticketCMS.Models.Product;
+@using Infrastructure.Extensions;
+@using DigiticketCMS.Config;
+@model ProductDetailTagsPartialViewModel
+
+@{
+    var Product = Model.ProductResponse;
+    var Tags = Model.TagsResponse;
+    int TagsLength = Tags.Count;
+    var TagsHighlight = Product.TagsHighlight;
+}
+
+<div class="tagHightLightChoice">
+    @if (!Tags.IsNullOrEmpty())
+    {
+        for (int i = 0; i < TagsLength; i++)
+        {
+            var item = Tags[i];
+            bool isChecked = TagsHighlight.Any(t => t.Id == item.Id);
+
+            <div class="tagsHightPickItem">
+                <input data-value="@Json.Encode(item)"
+                       @(isChecked ? "checked" : "")
+                       id="tagsHightPickItem-@item.Id"
+                       class="updateSelectTagsHightLight cursor-pointer mr-2"
+                       type="checkbox"
+                       onchange="ProductDetail.onPickTagsHightLight(this);" />
+                <label for="tagsHightPickItem-@item.Id"
+                       class="p-0 m-0 text-truncate cursor-pointer font-weight-light">
+                    @item.Name
+                </label>
+            </div>
+        }
+    }
+</div>
+@if (User.CheckPermission(Permission.ProductEditGroupService))
+{
+    <div class="addTagHightlight">
+        <button type="button" class="addHightlightBtn border btn btn-primary">
+            <i class="font-size-1r6 flaticon2-add"></i>
+            Thêm mới Tag hightlight
+        </button>
+        <div class="additionBody display-none border mt-2 p-2">
+            <label class="mt-3">Tên</label>
+            <label class="ml-2 error errName display-none">Chưa nhập tên</label>
+            <input class="tagName form-control" />
+            <label class="mt-3">Ký tự hiển thị</label>
+            <label class="ml-2 error errorTagShowText display-none">Chưa nhập ký tự hiển thị</label>
+            <input class="tagShowText form-control" />
+            <label class="mt-3">Index</label>
+            <input type="number" class="tagIndex form-control" />
+            <button type="button" class="actionAddTagHightlight btn btn-primary mt-3">
+                Thêm
+            </button>
+        </div>
+    </div>
+}

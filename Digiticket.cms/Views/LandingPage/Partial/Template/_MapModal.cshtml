@@ -1,0 +1,39 @@
+﻿@model int
+
+@using (Html.BeginForm("TemplateMap", "LandingPage", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "TemplateMap",
+    spellcheck = false,
+    showLoading = true
+}))
+{
+    <input name="TemplateId" value="@Model" type="hidden" />
+    <div class="modal-header">
+        <h1 class="modal-title">
+            Map Template component
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <label for="TemplateComponentId">Template component</label><label class="text-red error ml-5" for="TemplateComponentId"></label>
+            <select class="form-control select-templateComponent" name="selectType"></select>
+            <input type="hidden" class="d-none" name="TemplateComponentId" id="templateComponentId" />
+        </div>
+        <div class="mt-4">
+            <label for="Idx">Idx</label><label class="text-red error ml-5" for="Idx"></label>
+            <input type="number" min="0" class="form-control" name="Idx" />
+        </div>
+        <div class="mt-4">
+            <label>Ảnh mẫu</label>
+            <img src="" class="parttenImg display-none img-width-fit" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn-upload-media btn btn-primary">Hoàn tất</button>
+    </div>
+}

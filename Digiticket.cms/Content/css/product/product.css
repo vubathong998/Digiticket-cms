@@ -1,0 +1,412 @@
+﻿:root {
+    --bgc-active: #6b98d3;
+}
+
+label {
+    /* margin-bottom: 0; */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+[readonly].form-control {
+    background-color: #e7e7e7;
+    border: 1px solid rgb(192, 192, 192);
+    cursor: not-allowed;
+}
+
+.ListResize .img img {
+    max-width: 200px;
+    height: 170px;
+    object-fit: cover;
+}
+.imgSmall {
+    max-width: 200px;
+    object-fit: cover;
+    height: 100px;
+}
+
+/* .img-container .select2-container .select2-selection {
+    height: 123px;
+    overflow: scroll;
+} */
+
+/* .tagify.videoProduct.custom-tag {
+    height: 123px;
+    overflow: scroll;
+} */
+
+tag.tagify__tag[title] {
+    background-color: #f7f8fa;
+    border: 1px solid #ebedf2;
+}
+
+#tags .eTagsHightLight {
+    min-height: 35px;
+    border-radius: 4px;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+}
+
+#tags > .eTagsHightLightValue:hover {
+    cursor: pointer;
+}
+
+#tags .tagsHightLightDropDown {
+    position: absolute;
+    z-index: 2;
+    /* bottom: 1px; */
+    left: 0;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: white;
+}
+#tags .tagHightLightChoice .tagsHightPickItem {
+    display: inline-block;
+    width: 32%;
+    margin-right: 10px;
+}
+
+#tags .tagHightLightChoice {
+    width: 60%;
+    float: left;
+    min-height: 300px;
+}
+
+#tags .addTagHightlight {
+    float: left;
+    width: 39%;
+}
+#tags .addTagHightlight button{
+    font-size: 18px;
+}
+
+#tags .tagsHightLightDropDown {
+    /* display: none; */
+}
+
+#tags .hightLightTagPickedItem {
+    font-size: 12px;
+    color: #74788d;
+    background-color: #f7f8fa;
+    line-height: 18px;
+    border-radius: 3px;
+}
+
+#tags .hightLightTagPickedItem i {
+    color: #74788d;
+    font-size: 0.62rem;
+    background-color: transparent;
+}
+
+#tagsGroup .previewComponentSub {
+    background-color: transparent;
+}
+#tagsGroup .previewComponentSub:hover {
+    background-color: var(--digiticket-color-yellow);
+}
+
+#tagsGroup .active {
+    background-color: var(--digiticket-color-yellow);
+}
+
+#CompareServicePriceModal {
+    z-index: 1051;
+}
+
+#groupService__baseInfo .BaseInfo {
+    height: calc(100vh - 258px);
+    overflow-y: scroll;
+}
+
+.headerList {
+    background: var(--background-yellow);
+}
+.videoListItem {
+    animation: videoListAnimation 0.5s forwards;
+}
+#groupServiceUpdateImage div.dataTables_wrapper div.dataTables_scroll {
+    margin-top: 0 !important;
+}
+
+#groupService__image .image {
+    overflow: scroll;
+    max-height: calc(100vh - 20rem);
+}
+
+.previewNameSub {
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 21px;
+    text-align: left;
+    word-spacing: 0;
+    margin-bottom: 3px;
+}
+
+.previewComponentSub {
+    padding: 0 4px 0 4px;
+    border: 1px solid #cccccc;
+    line-height: 30px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.allSelect {
+    background-color: var(--light-pink);
+}
+
+.nameGroupServicePrice {
+    font-size: 1.14rem;
+}
+.nameGroupServicePrice td {
+    padding: 2px;
+}
+.nameGroupServicePrice input,
+.nameGroupServicePrice select {
+    border: none;
+}
+.nameGroupServicePrice select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
+.nameGroupServicePrice {
+    /* border-collapse: separate;
+    border-spacing: 0 1rem; */
+}
+.groupSubTag-Name {
+    max-width: 85%;
+    transform: translateY(29%);
+    padding-right: 2px;
+}
+.TagGroupPlace {
+    flex-wrap: wrap;
+}
+
+.compareUl {
+    min-height: 300px;
+}
+.compareUl > li {
+    margin-top: 20px;
+}
+.compareUl > li > ul > li {
+    margin-top: 10px;
+}
+.CompareInfo_container {
+    font-size: 1.25rem;
+}
+
+#groupService__tags .itemParentTags {
+    position: relative;
+    user-select: none;
+}
+
+#groupService__tags .blindfoldBorderRight {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    right: -1px;
+    width: 2px;
+    height: 100%;
+    background-color: white;
+    display: none;
+}
+
+#groupService__tags .tagSelected {
+    user-select: none;
+    padding: 5px 5px;
+    max-height: 75px;
+    overflow-y: scroll;
+}
+#groupService__tags .tagSelected .tagSelected--item {
+    display: inline-block;
+    padding: 1px 7px;
+    margin-right: 2px;
+    background-color: var(--background-deep-light4);
+}
+#groupService__tags .eTagsHightLightValue .hightLightTagPickedItem {
+    border-radius: 3px;
+}
+
+#groupService__tags .subTagsContainer {
+    position: relative;
+}
+
+#groupService__tags .addSubTag {
+    display: none;
+}
+
+#groupService__tags .active {
+    background-color: #416aff;
+    color: white;
+}
+#groupService__tags .active i {
+    color: white;
+}
+#groupService__tags .justFound {
+    background-color: #ffad0040;
+}
+
+#groupService__tags .subTagsContainer .itemSubItems,
+#groupService__tags .subTagsContainer .controlSubTags {
+    display: none;
+}
+
+@keyframes videoListAnimation {
+    from {
+        transform: translateY(50%);
+    }
+    to {
+        transform: translate(0);
+    }
+}
+
+.tooltip-inner {
+    max-width: 750px;
+    /* If max-width does not work, try using width instead */
+}
+
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    #groupServiceUpdateTagsInfo .itemParentTagsName {
+        font-size: 1.05rem;
+    }
+    #groupServiceUpdateTagsInfo .lastSubItem {
+        font-size: 1.1rem;
+    }
+    #tagsGroup .tagsGroup {
+        max-height: calc(100vh - 35.7rem);
+        min-height: 50px;
+        overflow: scroll;
+    }
+    #image .imageContainer {
+        max-height: calc(100vh - 29.3rem);
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    #seo .seo {
+        max-height: calc(100vh - 30.3rem);
+        overflow: scroll;
+    }
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 38rem) !important;
+    }
+    #baseInfo .BaseInfo {
+        max-height: calc(100vh - 29.8rem);
+        overflow: scroll;
+    }
+    .selectAllServicePriceContainer {
+        margin-right: 5.3rem;
+    }
+    .table-ServicePrice .dataTables_scrollBody {
+        max-height: initial !important;
+    }
+    .table-groupService .dataTables_scrollBody {
+        max-height: initial !important;
+    }
+    #groupService__tags .tagPlace {
+        height: calc(100vh - 31.7rem);
+    }
+    #groupService__tags .itemSubItems {
+        overflow-y: scroll;
+        max-height: calc(100vh - 38.4rem);
+    }
+    #groupService__tags .itemParentTags .itemParentTagsName {
+        width: 92%;
+    }
+}
+@media screen and (min-width: 1400px) {
+    #tagsGroup .tagsGroup {
+        max-height: calc(100vh - 35.7rem);
+        min-height: 50px;
+        overflow: scroll;
+    }
+    #image .imageContainer {
+        max-height: calc(100vh - 26rem);
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    #seo .seo {
+        max-height: calc(100vh - 30.4rem);
+        overflow: scroll;
+    }
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 33.6rem) !important;
+    }
+    #baseInfo .BaseInfo {
+        max-height: calc(100vh - 26.5rem);
+        overflow: scroll;
+    }
+    .selectAllServicePriceContainer {
+        margin-right: 6rem;
+    }
+    .table-ServicePrice .dataTables_scrollBody {
+        position: relative;
+        overflow: auto;
+        width: 100%;
+        height: calc(100vh - 47rem);
+    }
+    /* .table-groupService .dataTables_scrollBody {
+        max-height: calc(100vh - 48.4rem) !important;
+    } */
+
+    #groupService__tags .tagPlace {
+        height: calc(100vh - 29.4rem);
+    }
+    #groupService__tags .itemSubItems {
+        overflow-y: scroll;
+        max-height: calc(100vh - 36.3rem);
+    }
+    #groupService__tags .itemParentTags .itemParentTagsName {
+        width: 94%;
+    }
+}
+
+.groupSubTag:hover {
+    cursor: all-scroll;
+    background-color: #fff;
+}
+.border-red {
+    border: 2px solid #da1b20 !important;
+}
+.border-blue {
+    border: 2px solid #281bda !important;
+}
+.text-blue {
+    color: #281bda;
+}
+
+.border-top-red {
+    border-top: 2px solid #da1b20 !important;
+}
+
+.border-top-blue {
+    border-top: 2px solid #281bda !important;
+}
+.accent-color-red {
+    accent-color: #da1b20;
+}
+.background-red {
+    background-color: #da1b20 !important;
+}
+.background-blue {
+    background-color: #281bda !important;
+}
+
+.dataTables_wrapper tbody {
+    background-color: #fafafa;
+}
+
+.hightlightDeleted {
+    background-color: var(--background-deep-light);
+}
+
+.text-gray {
+    color: var(--text-grey);
+}
+
+ul {
+    padding-inline-start: 20px;
+}

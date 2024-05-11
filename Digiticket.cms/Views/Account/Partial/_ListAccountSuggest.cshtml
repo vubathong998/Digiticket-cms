@@ -1,0 +1,17 @@
+﻿@model List<Services.Models.ProfileResponse>
+
+<ul class="list-suggest mt-2" style="padding-inline-start:1rem">
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <li class="pointer mt-2 account" data-id="@item.Id" data-name="@item.DisplayName">@item.DisplayName (@item.UserName)</li>
+        }
+    }
+    else
+    {
+        <li class="mt-2">Không có kết quả</li>
+    }
+</ul>
+
+

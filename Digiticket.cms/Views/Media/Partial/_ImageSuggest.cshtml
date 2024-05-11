@@ -1,0 +1,22 @@
+﻿@using Infrastructure.Extensions;
+@using Services.Models.Responses.Media;
+@model List<MediaGetByPageResponse>
+
+<ul class="list-suggest-img mt-2" style="padding-inline-start:1rem">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <li class="pointer mt-2 template"
+                data-fileName="@item.FileName"
+                data-Url="@item.Url"
+            >
+                @item.FileName
+            </li>
+        }
+    }
+    else
+    {
+        <li class="mt-2">Không có kết quả</li>
+    }
+</ul>

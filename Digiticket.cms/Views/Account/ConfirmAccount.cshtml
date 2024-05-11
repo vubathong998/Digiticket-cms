@@ -1,0 +1,55 @@
+﻿@model DigiticketCMS.Models.ViewModel.ConfirmAccountViewModel
+
+@{
+    ViewBag.Title = "Xác nhận tài khoản";
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<!--begin::Head-->
+<div class="kt-login__head">
+    <span class="kt-login__signup-label">Bạn đã có tài khoản?</span>&nbsp;&nbsp;
+    <a href="@Url.Action("Login", "Account", new { ReturnUrl = Model.ReturnUrl })" class="kt-link kt-login__signup-link">Đăng nhập!</a>
+</div>
+<!--end::Head-->
+<!--begin::Body-->
+<div class="kt-login__body">
+    <!--begin::Signin-->
+    <div class="kt-login__form">
+        <div class="kt-login__title">
+            <h3>Xác nhận tài khoản</h3>
+        </div>
+        @if (ViewBag.Resend == null)
+        {
+            <div class="alert alert-info" role="alert">Vui lòng nhập mã xác nhận đã được gửi tới @Model.Username</div>
+        }
+        else if (ViewBag.Resend == true)
+        {
+            <div class="alert alert-info" role="alert">Vui lòng nhập mã xác nhận mới đã được gửi tới @Model.Username</div>
+        }
+        else if (ViewBag.Resend == false)
+        {
+            <div class="alert alert-info" role="alert">Mã xác nhận chưa gửi lại được. Vui lòng thử lại sau.</div>
+        }
+        <!--begin::Form-->
+        @using (Html.BeginForm("ConfirmAccount", "Account", FormMethod.Post, new { enctype = "multipart/form-data", @class = "kt-form ajax-form", @id = "kt_confirm_form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="alert alert-warning dp-none" role="alert">
+                <div class="alert-text"></div>
+            </div>
+            <input type="hidden" name="Username" value="@Model.Username" />
+            <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Nhập mã xác nhận" name="Code" required autocomplete="off">
+            </div>
+            <div class="kt-login__actions">
+                <button id="kt_login_signin_submit" type="submit" class="btn btn-primary btn-elevate kt-login__btn-primary mx-auto">Xác nhận</button>
+            </div>
+        }
+        <div class="mt-2 text-right">
+            Bạn chưa nhận được mã ? <span><a class="kt-link kt-login__signup-link" href="@Url.Action("ResendConfirmAccount", "Account", new { username = Model.Username, returnUrl = Model.ReturnUrl })">Gửi lại mã xác nhận</a></span>
+        </div>
+    </div>
+    <!--end::Signin-->
+</div>
+<!--end::Body-->

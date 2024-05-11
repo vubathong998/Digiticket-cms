@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "GroupService";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Danh mục sản phẩm
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    @*<div class="kt-portlet__head-wrapper">
+                            <div class="kt-portlet__head-actions">
+                                <div class=" text-right">
+                                    <a href="@Url.Action("Add", "Supplier")" class="btn btn-brand btn-elevate btn-icon-sm">
+                                        <i class="la la-plus"></i>
+                                        Thêm mới
+                                    </a>
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+            @* content table *@
+            <div class="kt-portlet__body">
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer table-Product">
+                    <div class="col-sm-12 col-md-2 row">
+                        <div class="col-12 col-sm-5">
+                            <div class="dataTables_length">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="html_table_Product">
+                                <thead class="">
+                                    <tr>
+                                        <th data-field="name">Tên</th>
+                                        <th data-field="categoryName">Danh mục</th>
+                                        <th class="sortable" data-field="supplierName">Nhà cung cấp</th>
+                                        <th class="sortable" data-field="type">Trạng thái</th>
+                                        <th class="sortable" data-field="Place">Địa điểm</th>
+                                        <th data-field="Url">Url</th>
+                                        <th data-field="description">Mô tả</th>
+                                        <th class="sortable" data-field="public">Public</th>
+                                        <th data-field="CreatedDate">Ngày tạo</th>
+                                        <th data-field="createdByName">Người tạo</th>
+                                        <th class="cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                        <th class="cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="dataTables_info">
+
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* end: content table *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+
+@section customScripts{
+
+    <script>
+    </script>
+}
+

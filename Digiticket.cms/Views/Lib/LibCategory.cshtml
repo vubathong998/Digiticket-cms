@@ -1,0 +1,94 @@
+﻿@using Infrastructure.Extensions;
+@using Infrastructure.Config;
+@using DigiticketCMS.Helpers;
+
+@using Services.Models.Responses.Lib;
+@model List<SubCategoryResponse>
+@{
+    ViewBag.Title = "Danh mục";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section customStyles {
+    <link href="~/Content/plugins/custom/jstree/jstree.bundle.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Category
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div id="categoryTree">
+                    <ul>
+                        @foreach (var item in Model)
+                        {
+                            <li data-jstree='{"opened": true}'>
+                                <span>@item.Name</span>
+                                @if (User.CheckPermission(Permission.SettingEdit))
+                                {
+                                    <button class="categoryBtn btn p-0 pl-3"
+                                            type="button" data-id="@item.Id">
+                                        <i class="flaticon-more-1"></i>
+                                    </button>
+                                }
+                                @UlTree(item)
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper UlTree(SubCategoryResponse category)
+{
+    if (!category.SubCategory.IsNullOrEmpty())
+    {
+        <ul>
+            @foreach (var itemSub in category.SubCategory)
+            {
+                <li>
+                    <span>@itemSub.Name</span>
+                    @if (User.CheckPermission(Permission.SettingEdit))
+                    {
+                        <button class="categoryBtn btn p-0 pl-3"
+                                type="button" data-id="@itemSub.Id">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                    }
+                    @if (!itemSub.SubCategory.IsNullOrEmpty())
+                    {
+                        UlTree(itemSub);
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts{
+    <script src="~/Content/plugins/custom/jstree/jstree.bundle.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/common-pages/lib/category.js?v=@SystemVersion.VersionJS"></script>
+
+    <script>
+        var permission = {
+            edit: '@(User.CheckPermission(Permission.SettingEdit))' === 'True' ? true : false
+        }
+
+        category.init();
+    </script>
+}
+<!--end::Portlet-->

@@ -1,0 +1,52 @@
+﻿.cursor tbody tr {
+    cursor: all-scroll;
+}
+
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 44.6rem) !important;
+    }
+    #PageAddOrUpdateModal .row {
+        overflow-y: scroll;
+        height: calc(100vh - 301px);
+    }
+    .parttemImgPlace {
+        height: calc(100vh - 29.3rem);
+        overflow: scroll;
+    }
+    .PageComponentDetailPlace {
+        overflow-y: scroll;
+        height: calc(100vh - 30.9rem);
+    }
+    #defaultModalContent .modal-body {
+        overflow: scroll;
+        max-height: calc(100vh - 14.9rem);
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .dataTables_scrollBody {
+        max-height: calc(100vh - 38.7rem) !important;
+    }
+    #PageAddOrUpdateModal .row {
+        overflow-y: scroll;
+        height: calc(100vh - 329px);
+        overflow-x: hidden;
+    }
+    .parttemImgPlace {
+        height: calc(100vh - 370px);
+        overflow: scroll;
+    }
+    .parttemImgPageComponentItemPlace {
+        height: calc(100vh - 29rem);
+        overflow-y: scroll;
+    }
+    .PageComponentDetailPlace {
+        overflow-y: scroll;
+        height: calc(100vh - 27.4rem);
+    }
+    #defaultModalContent .modal-body {
+        overflow: scroll;
+        max-height: calc(100vh - 14.7rem);
+    }
+}

@@ -1,0 +1,354 @@
+﻿@using Infrastructure.Extensions;
+@using DigiticketCMS.Helpers;
+@using Infrastructure.Config;
+@using DigiticketCMS.Config;
+@using DigiticketCMS.Models.Supplier;
+@model SupplierViewModel
+@{
+    bool isReadOnly = Model.TenantId == 0 || string.IsNullOrEmpty(Model.TenantCode) ? true : false;
+    ViewBag.Title = "Thông tin NCC " + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section customStyles{
+    <link href="~/Content/css/supplier/supplier.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+    <link href="~/Content/css/Supplier/supplierDetail.css?v=@SystemVersion.VersionCSS" rel="stylesheet" />
+}
+
+<div class="kt-content kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Thông tin NCC <span class="text-success">@Model.Name</span>
+                    </h3>
+                </div>
+            </div>
+            <div class="contentUpdaTenant m-3">
+                <ul class="nav nav-tabs mb-2" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link show active" data-toggle="tab" href="#baseInfo">Thông tin cơ bản</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#bookingInfo">Thông tin booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#supplierBanks">Tài khoản thanh toán</a>
+                    </li>
+                    @if (User.CheckPermission(Permission.SuppliersImportProduct))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#productFromDigiPost">Sản phẩm từ digipost</a>
+                        </li>
+                    }
+                    @if (User.CheckPermission(Permission.Product))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#product">Sản phẩm</a>
+                        </li>
+                    }
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="supplierContent tab-content">
+                    <div id="baseInfo" class="tab-pane show active">
+                        @using (Html.BeginForm("SupplierUpdateBaseInfo", "Supplier", FormMethod.Post, new
+                        {
+                            enctype = "multipart/form-data",
+                            @class = "kt-form ajax-form",
+                            @id = "upDateBaseInfo",
+                            spellcheck = false
+                        }))
+                        {
+                            <div class="BaseInfo p-3 border">
+                                <input type="hidden" value="@Model.Id" name="Id" readonly />
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="name">Tên</label><label class="text-danger error ml-5" for="name"></label>
+                                        <input type="text" class="form-control" name="name" value="@Model.Name" />
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="shortDescription">Mô tả ngắn</label><label class="text-danger error ml-5" for="shortDescription"></label>
+                                        <input type="text" class="form-control" name="shortDescription" value="@Model.ShortDescription" />
+                                    </div>
+                                </div>
+                                <div class="row mb-2 mt-4">
+                                    <div class="col-12 col-md-6">
+                                        <label for="description">Mô tả</label><label class="text-danger error ml-5" for="description"></label>
+                                        <input type="text" class="form-control" name="description" value="@Model.Description" />
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="address">Địa chỉ</label><label class="text-danger error ml-5" for="address"></label>
+                                        <input type="text" class="form-control" name="address" value="@Model.Address" />
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 col-md-3">
+                                        <label for="title">Chức vụ</label><label class="text-danger error ml-5" for="title"></label>
+                                        <input type="text" class="form-control" name="title" value="@Model.Title" />
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <label for="contactName">Tên liên hệ</label><label class="text-danger error ml-5" for="contactName"></label>
+                                        <input type="text" class="form-control" name="contactName" value="@Model.ContactName" />
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <label for="phone">Số điện thoại</label><label class="text-danger error ml-5" for="phone"></label>
+                                        <input type="text" class="form-control" name="phone" value="@Model.Phone" />
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <label for="email">Email</label><label class="text-danger error ml-5" for="email"></label>
+                                        <input type="text" class="form-control" name="email" value="@Model.Email" />
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 col-md-6">
+                                        <label for="companyName">Tên doanh nghiệp</label><label class="text-danger error ml-5" for="companyName"></label>
+                                        <input type="text" class="form-control" name="companyName" value="@Model.CompanyName" />
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="companyRepresentative">Người đại diện</label><label class="text-danger error ml-5" for="companyRepresentative"></label>
+                                        <input type="text" class="form-control" name="companyRepresentative" value="@Model.CompanyRepresentative" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mt-4">
+                                    <div class="col-12 col-md-6">
+                                        <label for="companyTaxCode">Mã số thuế</label><label class="text-danger error ml-5" for="companyTaxCode"></label>
+                                        <input type="text" class="form-control" name="companyTaxCode" value="@Model.CompanyTaxCode" />
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="companyAddress">Địa chỉ doanh nghiệp</label><label class="text-danger error ml-5" for="companyAddress"></label>
+                                        <input type="text" class="form-control" name="companyAddress" value="@Model.CompanyAddress" />
+                                    </div>
+                                </div>
+                            </div>
+                            if (User.CheckPermission(Permission.SuppliersEdit))
+                            {
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div id="bookingInfo" class="margin-initial tab-pane fade">
+                        @using (Html.BeginForm("SupplierUpdateBookingInfo", "Supplier", FormMethod.Post, new
+                        {
+                            enctype = "multipart/form-data",
+                            @class = "kt-form ajax-form",
+                            @id = "updateBookingInfo",
+                            spellcheck = false,
+                            showLoading = true
+                        }))
+                        {
+                            <div class="border pb-2 mt-2">
+                                <input type="hidden" value="@Model.Id" name="Id" readonly />
+                                <div class="tags-container col-12 tags-element w-100 mt-3">
+                                    <label for="hotline">Hotline</label>
+                                    <input class="custom-tag" name="hotline" id="hotline" value="@Model.Hotline">
+                                </div>
+                                <div class="tags-container col-12 tags-element w-100 mb-2 mt-4">
+                                    <label for="bookingEmail">BookingEmail</label>
+                                    <input class="custom-tag" name="bookingEmail" id="bookingEmail" value="@Model.BookingEmail">
+                                </div>
+                            </div>
+                            if (User.CheckPermission(Permission.SuppliersEdit))
+                            {
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div id="supplierBanks" class="tab-pane fade mt-2">
+                        @if (User.CheckPermission(Permission.SuppliersEdit))
+                        {
+                            <div class="d-flex justify-content-end">
+                                <a href="@Url.Action("SupplierAddOrUpdateBankModal", "Supplier",new { supplierId = @Model.Id})" class="cursor-pointer btn btn-brand btn-elevate btn-icon-sm"
+                                   data-modal-http-get="" data-modal-size="modal-lg" data-callback="SupplierDetail.onValidationUpdateBank()">
+                                    <i class="la la-plus"></i>
+                                    Thêm mới
+                                </a>
+                            </div>
+                        }
+                        <div class="dataTables_wrapper dt-bootstrap4 no-footer table-SupplierBank">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered w-100" id="html_table_SupplierBank">
+                                        <thead class="">
+                                            <tr>
+                                                <th data-field="accountName">Tên</th>
+                                                <th data-field="accountNo">Tên tài khoản</th>
+                                                <th data-field="bankName">Tên ngân hàng</th>
+                                                <th data-field="branchName">Chi nhánh</th>
+                                                <th data-field="status">status</th>
+                                                <th data-field="CreatedDate">Ngày tạo</th>
+                                                <th data-field="createdByName">Người tạo</th>
+                                                <th class="cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                                <th class="cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>
+                                                <th title="Chi tiết">Sửa</th>
+                                                <th title="Chi tiết">Xóa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (User.CheckPermission(Permission.SuppliersImportProduct))
+                    {
+                        <div id="productFromDigiPost" class="tab-pane fade">
+                            <div class="dataTables_wrapper dt-bootstrap4 no-footer table-ProductGetListFromDigipost">
+                                <div class="row align-items-between">
+                                    @FilterHelper.FindName()
+                                    @if (isReadOnly)
+                                    {
+                                        <div class="updateTenantBtn2 align-self-end mr-2">
+                                            <button type="button" class="btn btn-success">
+                                                <i class="la la-retweet"></i>
+                                                Update tenant
+                                            </button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="align-self-end mr-2">
+                                            <button class="reloadProductFromDigiPost btn btn-primary" type="button">Reload</button>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 px-2 mt-2">
+                                        <table class="table table-bordered w-100 m-0" id="html_table_ProductGetListFromDigipost">
+                                            <thead class="">
+                                                <tr>
+                                                    <th data-field="name">Tên</th>
+                                                    <th data-field="description">Mô tả</th>
+                                                    <th data-field="CreatedDate">Ngày tạo</th>
+                                                    <th data-field="createdByName">Người tạo</th>
+                                                    <th>Import</th>
+                                                    @*<th title="Chi tiết">Xóa</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (User.CheckPermission(Permission.Product))
+                    {
+                        <div id="product" class="tab-pane">
+                            @* content table *@
+                            <div class="dataTables_wrapper dt-bootstrap4 no-footer table-Product">
+                                <div class="row headerTable pl-3 mt-3">
+                                    <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                                        <div class="col-12 col-sm-5">
+                                            <div class="dataTables_length">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @FilterHelper.ClearFilter()
+                                    @FilterHelper.FindName("col-sm-12 col-lg-3 p-0 px-lg-2")
+                                    @FilterHelper.Category(Model.Categories)
+                                    @FilterHelper.destination(Model.Destinations)
+                                    @FilterHelper.Status()
+                                    @FilterHelper.Public()
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered" id="html_table_Product">
+                                            <thead class="">
+                                                <tr>
+                                                    <th class="sortable" data-field="name">Tên sản phẩm</th>
+                                                    <th class="sortable" data-field="DigipostName">Tên bảng giá Digipost</th>
+                                                    <th data-field="categoryName">Danh mục</th>
+                                                    <th class="sortable" data-field="Place">Điểm đến</th>
+                                                    <th class="sortable" data-field="supplierName">Nhà cung cấp</th>
+                                                    <th class="sortable" data-field="type">Trạng thái</th>
+                                                    <th class="sortable" data-field="Idx">Idx</th>
+                                                    <th data-field="Public">Public</th>
+                                                    <th data-field="Url">Xem trước</th>
+                                                    <th data-field="CreatedDate">Ngày tạo</th>
+                                                    <th data-field="createdByName">Người tạo</th>
+                                                    <th class="cursor-default" data-field="lastEditedDate" data-toggle="tooltip" title="Ngày sửa gần nhất">Ngày SGN</th>
+                                                    <th class="cursor-default" data-field="lastEditedByName" data-toggle="tooltip" title="Người sửa gần nhất">Ng SGN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="dataTables_info">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="dataTables_paginate paging_simple_numbers">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled">
+                                                    <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                                        <i class="la la-angle-left"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="paginate_button page-item active">
+                                                    <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                </li>
+                                                <li class="paginate_button page-item next disabled">
+                                                    <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                                        <i class="la la-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            @* end: content table *@
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end:: Content -->
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts {
+    @*<script src="~/Content/plugins/jquery-validate/jquery.validate.min.js"></script>
+        <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>*@
+
+    <script>
+        var permission = {
+            edit: '@User.CheckPermission(Permission.SuppliersEdit)' === 'True' ? true : false
+        }
+        supplierId = '@Model.Id';
+        var id = '@Model.Id';
+
+        var isReadOnly = '@isReadOnly' === 'True' ? true : false;
+        var supplier = {
+            id: '@Model.Id',
+            name: '@Model.Name',
+            tenantId: '@Model.TenantId',
+            tenantCode: '@Model.TenantCode'
+        };
+    </script>
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/product/productGetByPage.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/product/productGetListByTenantFromDigipost.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/supplier/supplierDetail.js?v=@SystemVersion.VersionJS"></script>
+    <script>
+        SupplierDetail.initContentDetail();
+    </script>
+}

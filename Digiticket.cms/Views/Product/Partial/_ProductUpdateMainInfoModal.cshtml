@@ -1,0 +1,48 @@
+﻿@using DigiticketCMS.Models.Lib;
+@model LibViewModel
+
+@using (Html.BeginForm("ProductUpdateMainInfo", "Product", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    @class = "kt-form ajax-form",
+    @id = "FormSupplierUpdateTenant",
+    spellcheck = false
+}))
+{
+    <input type="hidden" readonly value="@Model.Id" name="id" />
+    <div class="modal-header">
+        <h1 class="modal-title">
+      Update thông tin chính <span class="text-success">@Model.Name</span>
+        </h1>
+    </div>
+    <div class="modal-body">
+        @*<lable for="name">Tên sản phẩm</lable>
+        <input class="form-control" type="text" name="name" placeholder="Nhập tên" />*@
+        <div class="mt-3">
+            <lable>Chọn danh mục</lable>
+            <select class="form-control kt-select2 kt-select2-category" name="categoryId">
+                @foreach (var category in Model.Category)
+                {
+                    <optgroup label="@category.Name">
+                        @foreach (var subCategory in category.SubCategory)
+                        {
+                            <option value="@subCategory.Id">@subCategory.Name</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </div>
+        <div class="mt-3">
+            <lable>Chọn điểm đến</lable>
+            <select class="form-control kt-select2 kt-select2-destination" name="destinationId">
+                @foreach (var destination in Model.Destination)
+                {
+                    <option value="@destination.Id">@destination.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Hoàn tất</button>
+    </div>
+}

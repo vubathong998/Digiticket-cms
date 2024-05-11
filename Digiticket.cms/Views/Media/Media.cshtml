@@ -1,0 +1,123 @@
+﻿@using Infrastructure.Config;
+@{
+    ViewBag.Title = "Media";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link href="~/Content/css/media/media.css" rel="stylesheet" />
+}
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+    <!-- begin:: Content -->
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Media
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="kt-portlet__head-actions">
+                            <div class=" text-right">
+                                <a href="@Url.Action("MediaAddModal", "Media")" class="btn btn-primary btn-elevate btn-icon-sm"
+                                   data-modal="" data-modal-size="modal-lg" data-callback="mediaAddModal.init();">
+                                    <i class="la la-upload"></i>
+                                    Thêm mới ảnh gốc
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="toastContainer position-fixed" style="z-index: 999999999;">
+                <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="300">
+                    <div class="toast-body">
+                        <h3 class="">Copy thành công</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer table-media">
+                    <div class="row headerTable pl-3">
+                        <div class="col-sm-12 col-md-1 row col-lg-1 p-0">
+                            <div class="col-12 col-sm-5">
+                                <div class="dataTables_length">
+
+                                </div>
+                            </div>
+                        </div>
+                        @FilterHelper.ClearFilter()
+                        @FilterHelper.FindName()
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="html_table_Media">
+                                <thead class="">
+                                    <tr>
+                                        <th class="sortable" data-field="FileName">FileName</th>
+                                        <th data-field="AspectRatioX">Tỷ lệ</th>
+                                        <th data-field="Width">Kích thước gốc</th>
+                                        <th class="sortable" data-field="CreatedDate">Ngày upload</th>
+                                        <th>Xem ảnh</th>
+                                        <th>Xem ảnh resize</th>
+                                        <th>Coppy Link</th>
+                                        @*<th title="Chi tiết">TT</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="dataTables_info">
+
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="0" tabindex="0" class="page-link">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="javascript:void(0)" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a href="javascript:void(0)" data-dt-idx="2" tabindex="0" class="page-link">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* end: content table *@
+        </div>
+        <!-- end:: Content -->
+    </div>
+</div>
+
+@Html.Partial("~/Views/Modals/_DefaultModal.cshtml")
+
+@section customScripts{
+    <script src="~/Content/plugins/select2/js/select2.full.min.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/plugins/jquery-validate/jquery.validate.unobtrusive.min.js?v=@SystemVersion.VersionJS"></script>
+
+    <script src="~/Content/js/app-code/filterHelper.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/media/media.js?v=@SystemVersion.VersionJS"></script>
+    <script src="~/Content/js/common-pages/media/mediaAddModal.js?v=@SystemVersion.VersionJS"></script>
+    <script>
+        media.init();
+    </script>
+}

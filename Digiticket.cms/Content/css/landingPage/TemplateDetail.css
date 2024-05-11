@@ -1,0 +1,23 @@
+﻿.slash {
+    position: absolute;
+    top: 1.2rem;
+    left: -0.5rem;
+    transform: rotate(45deg);
+    width: 2.6rem;
+    height: 1px;
+    background-color: red;
+}
+
+@media screen and (max-width: 1399px) and (min-width: 800px) {
+    .parttenImg {
+        overflow-y: scroll;
+        height: calc(100vh - 29.3rem);
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .parttenImg {
+        overflow-y: scroll;
+        height: calc(100vh - 25.4rem);
+    }
+}
